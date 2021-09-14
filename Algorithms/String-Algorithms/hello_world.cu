@@ -13,7 +13,7 @@ int main() {
     // HOST EXECUTION
 
     // Declare host clock variables
-	float elapsedTimeHost;
+    float elapsedTimeHost;
     clock_t startTimeHost, stopTimeHost;
 
     // Start host clock
@@ -32,12 +32,12 @@ int main() {
     // DEVICE EXECUTION
 
     // Declare device clock variables
-	float elapsedTimeDevice;
+    float elapsedTimeDevice;
     cudaEvent_t startTimeDevice, stopTimeDevice;
 
     // Start device clock
     cudaEventCreate(&startTimeDevice);
-	cudaEventRecord(startTimeDevice, 0);
+    cudaEventRecord(startTimeDevice, 0);
 
     // Launch hello world kernel on device
     HelloWorldKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> ();
@@ -47,9 +47,9 @@ int main() {
 
     // Stop device clock
     cudaEventCreate(&stopTimeDevice);
-	cudaEventRecord(stopTimeDevice, 0);
-	cudaEventSynchronize(stopTimeDevice);
-	cudaEventElapsedTime(&elapsedTimeDevice, startTimeDevice, stopTimeDevice);
+    cudaEventRecord(stopTimeDevice, 0);
+    cudaEventSynchronize(stopTimeDevice);
+    cudaEventElapsedTime(&elapsedTimeDevice, startTimeDevice, stopTimeDevice);
     printf("Device Elapsed Time: %f ms\n", elapsedTimeDevice);
 
     // Check for any errors
