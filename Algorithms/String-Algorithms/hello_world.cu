@@ -23,11 +23,10 @@ int main() {
     for (int i = 0; i < numThreadsPerBlock; ++i) {
         std::cout << "Hello World №" << i << "!\n";
     }
-
     // Stop host clock
     stopTimeHost = clock();
     elapsedTimeHost = (float) ((stopTimeHost) - (startTimeHost));
-	printf("Host Elapsed Time: %f ms\n", elapsedTimeHost);
+    printf("Host Elapsed Time: %f ms\n", elapsedTimeHost);
     
     // DEVICE EXECUTION
 
