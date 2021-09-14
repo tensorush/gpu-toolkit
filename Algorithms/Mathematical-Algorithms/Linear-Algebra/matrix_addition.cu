@@ -1,11 +1,6 @@
 #include <iostream>
 #include <cmath>
 
-// Define global constants
-constexpr int NUM_ROW_ELEMENTS = 1 << 5;
-constexpr int NUM_COL_ELEMENTS = 1 << 5;
-constexpr int TOTAL_SIZE = NUM_ROW_ELEMENTS * NUM_COL_ELEMENTS * sizeof(int);
-
 // Define data input kernel
 template <typename T>
 __global__ void DataInputKernel(T *d_A, T *d_B) {
@@ -28,6 +23,15 @@ __global__ void MatrixAdditionKernel(T *d_A, T *d_B, T *d_C) {
 }
 
 int main() {
+    // Define input data parameters
+    const int NUM_ROW_ELEMENTS = 1 << 5;
+    const int NUM_COL_ELEMENTS = 1 << 5;
+    const int TOTAL_SIZE = NUM_ROW_ELEMENTS * NUM_COL_ELEMENTS * sizeof(int);
+
+    // Define execution configuration variables
+    dim3 numThreadsPerBlock(32, 32);
+    dim3 numBlocksPerGrid(std::ceil(NUM_ROW_ELEMENTS / 32.0), std::ceil(NUM_COL_ELEMENTS / 32.0));
+
     // Declare pointers to input data on device
     int(*d_A)[NUM_COL_ELEMENTS], (*d_B)[NUM_COL_ELEMENTS];
 
@@ -39,15 +43,11 @@ int main() {
     cudaMalloc((void **) &d_B, TOTAL_SIZE);
     cudaMalloc((void **) &d_C, TOTAL_SIZE);
 
-    // Define execution configuration variables
-    dim3 numThreadsPerBlock(32, 32);
-    dim3 numBlocksPerGrid(std::ceil(NUM_ROW_ELEMENTS / 32.0), std::ceil(NUM_COL_ELEMENTS / 32.0));
-
     // Launch data input kernel on device
-    DataInputKernel << <numBlocksPerGrid, numThreadsPerBlock >> > (d_A, d_B);
+    DataInputKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> (d_A, d_B);
 
     // Launch matrix addition kernel on device
-    MatrixAdditionKernel << <numBlocksPerGrid, numThreadsPerBlock >> > (d_A, d_B, d_C);
+    MatrixAdditionKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> (d_A, d_B, d_C);
 
     // Wait for the device to finish computing
     cudaDeviceSynchronize();

@@ -1,15 +1,15 @@
 #include <iostream>
 
-// Define execution configuration variables
-constexpr int numBlocksPerGrid = 1;
-constexpr int numThreadsPerBlock = 64;
-
 // Define hello world kernel
 __global__ void HelloWorldKernel() {
     printf("Hello World № %d!\n", threadIdx.x * gridDim.x);
 }
 
 int main() {
+    // Define execution configuration variables
+    int numBlocksPerGrid = 1;
+    int numThreadsPerBlock = 64;
+
     // HOST EXECUTION
 
     // Declare host clock variables
