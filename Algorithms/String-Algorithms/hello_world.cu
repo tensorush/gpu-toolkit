@@ -23,6 +23,7 @@ int main() {
     for (int i = 0; i < numThreadsPerBlock; ++i) {
         std::cout << "Hello World №" << i << "!\n";
     }
+    
     // Stop host clock
     stopTimeHost = clock();
     elapsedTimeHost = (float) ((stopTimeHost) - (startTimeHost));
@@ -39,7 +40,7 @@ int main() {
 	cudaEventRecord(startTimeDevice, 0);
 
     // Launch hello world kernel on device
-    HelloWorldNonSharedMemoryKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> ();
+    HelloWorldKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> ();
 
     // Wait for the device to finish computing
     cudaDeviceSynchronize();
