@@ -52,7 +52,7 @@ int main() {
 	cudaEventElapsedTime(&elapsedTimeDevice, startTimeDevice, stopTimeDevice);
     printf("Device Elapsed Time: %f ms\n", elapsedTimeDevice);
 
-    // Check for errors
+    // Check for any errors
     int exitStatus = EXIT_SUCCESS;
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
