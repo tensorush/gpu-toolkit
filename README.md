@@ -32,11 +32,15 @@
 
 ## :man_teacher: Learning Resources
 
+### :film_projector: [CUDA Streams](https://on-demand.gputechconf.com/gtc/2014/presentations/S4158-cuda-streams-best-practices-common-pitfalls.pdf)
+
 ### :tv: [CUDA Tutorials by Creel](https://www.youtube.com/playlist?list=PLKK11Ligqititws0ZOoGk3SW-TZCar4dK)
 
 ### :tv: [Intro to CUDA by Josh Holloway](https://www.youtube.com/playlist?list=PLC6u37oFvF40BAm7gwVP7uDdzmW83yHPe)
 
 ### :man_technologist: [CUDA Training Series by NVIDIA](https://github.com/olcf/cuda-training-series)
+
+### :man_technologist: [CUDA Examples by Sylvain Jubertie](https://github.com/sjubertie/teaching-CUDA/tree/master/examples)
 
 ### :tv: [CUDA Crash Course by CoffeeBeforeArch](https://www.youtube.com/playlist?list=PLxNPSjHT5qvtYRVdNN1yDcdSl39uHV_sU)
 
@@ -46,7 +50,11 @@
 
 ### :tv: [Parallel and Distributed Computing by Tom Nurkkala](https://www.youtube.com/playlist?list=PLG3vBTUJlY2HdwYsdFCdXQraInoc3j9DU)
 
+### :film_projector: [Optimizing Parallel Reduction in CUDA Slides by Mark Harris](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf)
+
 ### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
+
+### :tv: [Introduction to GPU Programming with CUDA and Thrust Talk by Richard Thomson](https://www.youtube.com/watch?v=tbb835UFRQ4&t=2229s)
 
 <!-- MARKDOWN LINKS -->
 

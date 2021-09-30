@@ -1,59 +1,77 @@
 #include <iostream>
 
+// Define constants on host
+constexpr unsigned BLOCK_DIM = 1 << 5;
+constexpr unsigned NUM_STREAMS = 1 << 1;
+constexpr unsigned NUM_GREETINGS = BLOCK_DIM;
+
+// Define constants on device
+__constant__ char *DEVICE_GREETING = "Hello World";
+__constant__ unsigned DEVICE_NUM_GREETINGS = NUM_GREETINGS;
+__constant__ unsigned DEVICE_NUM_GREETINGS_PER_STREAM = NUM_GREETINGS / NUM_STREAMS;
+
 // Define hello world kernel
-__global__ void HelloWorldKernel() {
-    printf("Hello World № %d!\n", threadIdx.x * gridDim.x);
+__global__ void HelloWorldKernel(unsigned streamIdx) {
+    unsigned i = streamIdx * DEVICE_NUM_GREETINGS_PER_STREAM + blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < DEVICE_NUM_GREETINGS) {
+        printf("%s №%d!\n", DEVICE_GREETING, i);
+    }
 }
 
 int main() {
-    // Define execution configuration variables
-    int numBlocksPerGrid = 1;
-    int numThreadsPerBlock = 64;
+    // Declare streams
+    cudaStream_t streams[NUM_STREAMS];
 
-    // HOST EXECUTION
+    // Create streams
+    cudaStreamCreate(&streams[0]);
+    cudaStreamCreate(&streams[1]);
 
-    // Declare host clock variables
-    float elapsedTimeHost;
-    clock_t startTimeHost, stopTimeHost;
+    // Declare event variables to measure execution time
+    float elapsedTime_1, elapsedTime_2;
+    cudaEvent_t startTime_1, startTime_2, endTime_1, endTime_2;
 
-    // Start host clock
-    startTimeHost = clock();
+    // Create events to measure execution time
+    cudaEventCreate(&startTime_1);
+    cudaEventCreate(&startTime_2);
+    cudaEventCreate(&endTime_1);
+    cudaEventCreate(&endTime_2);
 
-    // Launch execution on host
-    for (int i = 0; i < numThreadsPerBlock; ++i) {
-        std::cout << "Hello World №" << i << "!\n";
-    }
+    // Define kernel configuration variables
+    dim3 gridDim(1);
+    dim3 blockDim(BLOCK_DIM);
     
-    // Stop host clock
-    stopTimeHost = clock();
-    elapsedTimeHost = (float) ((stopTimeHost) - (startTimeHost));
-    printf("Host Elapsed Time: %f ms\n", elapsedTimeHost);
-    
-    // DEVICE EXECUTION
+    // Launch hello world kernel on device and record start of execution
+    HelloWorldKernel<<<gridDim, blockDim, 0, streams[0]>>>(0);
+    cudaEventRecord(startTime_1, streams[0]);
+    HelloWorldKernel<<<gridDim, blockDim, 0, streams[1]>>>(1);
+    cudaEventRecord(startTime_2, streams[1]);
 
-    // Declare device clock variables
-    float elapsedTimeDevice;
-    cudaEvent_t startTimeDevice, stopTimeDevice;
+    // Synchronize start of execution calls
+    cudaEventSynchronize(startTime_1);
+    cudaEventSynchronize(startTime_2);
 
-    // Start device clock
-    cudaEventCreate(&startTimeDevice);
-    cudaEventRecord(startTimeDevice, 0);
+    // Record end of execution
+    cudaEventRecord(endTime_1, streams[0]);
+    cudaEventRecord(endTime_2, streams[1]);
 
-    // Launch hello world kernel on device
-    HelloWorldKernel <<<numBlocksPerGrid, numThreadsPerBlock>>> ();
+    // Synchronize end of execution calls
+    cudaEventSynchronize(endTime_1);
+    cudaEventSynchronize(endTime_2);
 
-    // Wait for the device to finish computing
-    cudaDeviceSynchronize();
+    // Calculate and print elapsed time
+    cudaEventElapsedTime(&elapsedTime_1, startTime_1, endTime_1);
+    cudaEventElapsedTime(&elapsedTime_2, startTime_2, endTime_2);
+    std::cout << "Elapsed Time on Device Stream №1: " << elapsedTime_1 << " ms\n";
+    std::cout << "Elapsed Time on Device Stream №2: " << elapsedTime_2 << " ms\n";
 
-    // Stop device clock
-    cudaEventCreate(&stopTimeDevice);
-    cudaEventRecord(stopTimeDevice, 0);
-    cudaEventSynchronize(stopTimeDevice);
-    cudaEventElapsedTime(&elapsedTimeDevice, startTimeDevice, stopTimeDevice);
-    printf("Device Elapsed Time: %f ms\n", elapsedTimeDevice);
+    // Destroy events
+    cudaEventDestroy(startTime_1);
+    cudaEventDestroy(startTime_2);
+    cudaEventDestroy(endTime_1);
+    cudaEventDestroy(endTime_2);
 
     // Check for any errors
-    int exitStatus = EXIT_SUCCESS;
+    unsigned exitStatus = EXIT_SUCCESS;
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
         std::cout << "Error: " << cudaGetErrorString(err) << '\n';
