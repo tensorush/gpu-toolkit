@@ -34,6 +34,8 @@
 
 ### :film_projector: [CUDA Streams](https://on-demand.gputechconf.com/gtc/2014/presentations/S4158-cuda-streams-best-practices-common-pitfalls.pdf)
 
+### :man_technologist: [CUDA Samples by NVIDIA](https://github.com/NVIDIA/cuda-samples)
+
 ### :tv: [CUDA Tutorials by Creel](https://www.youtube.com/playlist?list=PLKK11Ligqititws0ZOoGk3SW-TZCar4dK)
 
 ### :tv: [Intro to CUDA by Josh Holloway](https://www.youtube.com/playlist?list=PLC6u37oFvF40BAm7gwVP7uDdzmW83yHPe)

@@ -1,20 +1,17 @@
 #include <iostream>
 
-// Define constants on host
+// Define global constants
 constexpr unsigned BLOCK_DIM = 1 << 5;
 constexpr unsigned NUM_STREAMS = 1 << 1;
+constexpr char *GREETING = "Hello World";
 constexpr unsigned NUM_GREETINGS = BLOCK_DIM;
-
-// Define constants on device
-__constant__ char *DEVICE_GREETING = "Hello World";
-__constant__ unsigned DEVICE_NUM_GREETINGS = NUM_GREETINGS;
-__constant__ unsigned DEVICE_NUM_GREETINGS_PER_STREAM = NUM_GREETINGS / NUM_STREAMS;
+constexpr unsigned NUM_GREETINGS_PER_STREAM = NUM_GREETINGS / NUM_STREAMS;
 
 // Define hello world kernel
 __global__ void HelloWorldKernel(unsigned streamIdx) {
-    unsigned i = streamIdx * DEVICE_NUM_GREETINGS_PER_STREAM + blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < DEVICE_NUM_GREETINGS) {
-        printf("%s №%d!\n", DEVICE_GREETING, i);
+    unsigned idx = NUM_GREETINGS_PER_STREAM * streamIdx + blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < NUM_GREETINGS) {
+        printf("%s №%d!\n", GREETING, idx);
     }
 }
 

@@ -1,29 +1,24 @@
 #include <iostream>
 
-// Define host constants
-constexpr unsigned NUM_ROWS = 1 << 10;
-constexpr unsigned NUM_COLS = 1 << 10;
+// Define global constants
+constexpr unsigned NUM_ROWS = 1 << 8;
+constexpr unsigned NUM_COLS = 1 << 9;
 constexpr unsigned BLOCK_DIM = 1 << 5;
 constexpr unsigned NUM_STREAMS = 1 << 1;
 constexpr unsigned TOTAL_SIZE = NUM_ROWS * NUM_COLS;
 constexpr unsigned STREAM_SIZE = TOTAL_SIZE / NUM_STREAMS;
-constexpr unsigned TOTAL_PITCH = TOTAL_SIZE * sizeof(float);
-constexpr unsigned STREAM_PITCH = TOTAL_PITCH / NUM_STREAMS;
-
-// Define device constants
-__constant__ unsigned DEVICE_NUM_ROWS = NUM_ROWS;
-__constant__ unsigned DEVICE_NUM_COLS = NUM_COLS;
-__constant__ unsigned DEVICE_STREAM_SIZE = STREAM_SIZE;
+constexpr unsigned TOTAL_BYTES = TOTAL_SIZE * sizeof(float);
+constexpr unsigned STREAM_BYTES = TOTAL_BYTES / NUM_STREAMS;
 
 // Define matrix addition kernel
 __global__ void MatrixAdditionKernel(float *A, float *B, float *C, unsigned streamIdx) {
-    unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
-    unsigned j = blockIdx.y * blockDim.y + threadIdx.y;
-    unsigned k = i * DEVICE_NUM_COLS + j;
-    if (i < DEVICE_NUM_ROWS && j < DEVICE_NUM_COLS &&
-        (streamIdx == 0 && k <= DEVICE_STREAM_SIZE ||
-        streamIdx == 1 && k > DEVICE_STREAM_SIZE)) {
-        C[k] = A[k] + B[k];
+    unsigned row = blockIdx.x * blockDim.x + threadIdx.x;
+    unsigned col = blockIdx.y * blockDim.y + threadIdx.y;
+    unsigned idx = row * NUM_COLS + col;
+    if (row < NUM_ROWS && col < NUM_COLS &&
+        (streamIdx == 0 && idx <= STREAM_SIZE ||
+        streamIdx == 1 && idx > STREAM_SIZE)) {
+        C[idx] = A[idx] + B[idx];
     }
 }
 
@@ -32,19 +27,19 @@ int main() {
     float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
 
     // Allocate pinned host memory for input data
-    cudaMallocHost((void **) &hostA, TOTAL_PITCH);
-    cudaMallocHost((void **) &hostB, TOTAL_PITCH);
-    cudaMallocHost((void **) &hostC, TOTAL_PITCH);
+    cudaMallocHost((void **) &hostA, TOTAL_BYTES);
+    cudaMallocHost((void **) &hostB, TOTAL_BYTES);
+    cudaMallocHost((void **) &hostC, TOTAL_BYTES);
 
     // Initialize input data on host
-    for (unsigned i = 0; i < NUM_ROWS; ++i) {
-        for (unsigned j = 0; j < NUM_COLS; ++j) {
-            hostA[i * NUM_COLS + j] = 2.0f;
+    for (unsigned row = 0; row < NUM_ROWS; ++row) {
+        for (unsigned col = 0; col < NUM_COLS; ++col) {
+            hostA[row * NUM_COLS + col] = 2.0f;
         }
     }
-    for (unsigned i = 0; i < NUM_ROWS; ++i) {
-        for (unsigned j = 0; j < NUM_COLS; ++j) {
-            hostB[i * NUM_COLS + j] = 3.0f;
+    for (unsigned row = 0; row < NUM_ROWS; ++row) {
+        for (unsigned col = 0; col < NUM_COLS; ++col) {
+            hostB[row * NUM_COLS + col] = 3.0f;
         }
     }
     
@@ -52,9 +47,9 @@ int main() {
     float *deviceA = nullptr, *deviceB = nullptr, *deviceC = nullptr;
 
     // Allocate device memory for input and output data
-    cudaMalloc((void **) &deviceA, TOTAL_PITCH);
-    cudaMalloc((void **) &deviceB, TOTAL_PITCH);
-    cudaMalloc((void **) &deviceC, TOTAL_PITCH);
+    cudaMalloc((void **) &deviceA, TOTAL_BYTES);
+    cudaMalloc((void **) &deviceB, TOTAL_BYTES);
+    cudaMalloc((void **) &deviceC, TOTAL_BYTES);
 
     // Declare streams
     cudaStream_t streams[NUM_STREAMS];
@@ -64,10 +59,10 @@ int main() {
     cudaStreamCreate(&streams[1]);
 
     // Copy input data from host to device
-    cudaMemcpyAsync(deviceA, hostA, STREAM_PITCH, cudaMemcpyHostToDevice, streams[0]);
-    cudaMemcpyAsync(deviceB, hostB, STREAM_PITCH, cudaMemcpyHostToDevice, streams[0]);
-    cudaMemcpyAsync(deviceA + STREAM_SIZE, hostA + STREAM_SIZE, STREAM_PITCH, cudaMemcpyHostToDevice, streams[1]);
-    cudaMemcpyAsync(deviceB + STREAM_SIZE, hostB + STREAM_SIZE, STREAM_PITCH, cudaMemcpyHostToDevice, streams[1]);
+    cudaMemcpyAsync(deviceA, hostA, STREAM_BYTES, cudaMemcpyHostToDevice, streams[0]);
+    cudaMemcpyAsync(deviceB, hostB, STREAM_BYTES, cudaMemcpyHostToDevice, streams[0]);
+    cudaMemcpyAsync(deviceA + STREAM_SIZE, hostA + STREAM_SIZE, STREAM_BYTES, cudaMemcpyHostToDevice, streams[1]);
+    cudaMemcpyAsync(deviceB + STREAM_SIZE, hostB + STREAM_SIZE, STREAM_BYTES, cudaMemcpyHostToDevice, streams[1]);
 
     // Declare event variables to measure execution time
     float elapsedTime_1, elapsedTime_2;
@@ -114,8 +109,8 @@ int main() {
     cudaEventDestroy(endTime_2);
 
     // Transfer output data from device to host
-    cudaMemcpyAsync(hostC, deviceC, STREAM_PITCH, cudaMemcpyDeviceToHost, streams[0]);
-    cudaMemcpyAsync(hostC + STREAM_SIZE, deviceC + STREAM_SIZE, STREAM_PITCH, cudaMemcpyDeviceToHost, streams[1]);
+    cudaMemcpyAsync(hostC, deviceC, STREAM_BYTES, cudaMemcpyDeviceToHost, streams[0]);
+    cudaMemcpyAsync(hostC + STREAM_SIZE, deviceC + STREAM_SIZE, STREAM_BYTES, cudaMemcpyDeviceToHost, streams[1]);
 
     // Destroy streams
     cudaStreamDestroy(streams[0]);
@@ -123,9 +118,9 @@ int main() {
 
     // Print output data on host
     std::cout << "C = A + B:\n";
-    for (unsigned i = 0; i < NUM_ROWS; ++i) {
-        for (unsigned j = 0; j < NUM_COLS; ++j) {
-            std::cout << hostC[i * NUM_COLS + j] << ' ';
+    for (unsigned row = 0; row < NUM_ROWS; ++row) {
+        for (unsigned col = 0; col < NUM_COLS; ++col) {
+            std::cout << hostC[row * NUM_COLS + col] << ' ';
         }
         std::cout << '\n';
     }
