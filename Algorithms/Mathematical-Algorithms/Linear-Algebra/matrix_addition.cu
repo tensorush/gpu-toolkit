@@ -1,4 +1,3 @@
-%%cu
 #include <iostream>
 
 // Define host constants
@@ -30,7 +29,7 @@ __global__ void MatrixAdditionKernel(float *A, float *B, float *C, unsigned stre
 
 int main() {
     // Declare pointers to input and output data on host
-	float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
+    float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
 
     // Allocate pinned host memory for input data
     cudaMallocHost((void **) &hostA, TOTAL_PITCH);
@@ -66,9 +65,9 @@ int main() {
 
     // Copy input data from host to device
     cudaMemcpyAsync(deviceA, hostA, STREAM_PITCH, cudaMemcpyHostToDevice, streams[0]);
-	cudaMemcpyAsync(deviceB, hostB, STREAM_PITCH, cudaMemcpyHostToDevice, streams[0]);
+    cudaMemcpyAsync(deviceB, hostB, STREAM_PITCH, cudaMemcpyHostToDevice, streams[0]);
     cudaMemcpyAsync(deviceA + STREAM_SIZE, hostA + STREAM_SIZE, STREAM_PITCH, cudaMemcpyHostToDevice, streams[1]);
-	cudaMemcpyAsync(deviceB + STREAM_SIZE, hostB + STREAM_SIZE, STREAM_PITCH, cudaMemcpyHostToDevice, streams[1]);
+    cudaMemcpyAsync(deviceB + STREAM_SIZE, hostB + STREAM_SIZE, STREAM_PITCH, cudaMemcpyHostToDevice, streams[1]);
 
     // Declare event variables to measure execution time
     float elapsedTime_1, elapsedTime_2;

@@ -33,7 +33,7 @@ __global__ void RectangularMatrixMultiplicationKernel(float *A, float *B, float 
 
 int main() {
     // Declare pointers to input and output data on host
-	float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
+    float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
 
     // Allocate pinned host memory for input data
     cudaMallocHost((void **) &hostA, TOTAL_PITCH_A);
@@ -62,7 +62,7 @@ int main() {
 
     // Copy input data from host to device
     cudaMemcpy(deviceA, hostA, TOTAL_PITCH_A, cudaMemcpyHostToDevice);
-	cudaMemcpy(deviceB, hostB, TOTAL_PITCH_B, cudaMemcpyHostToDevice);
+    cudaMemcpy(deviceB, hostB, TOTAL_PITCH_B, cudaMemcpyHostToDevice);
 
     // Declare event variables to measure execution time
     float elapsedTime_1, elapsedTime_2;
