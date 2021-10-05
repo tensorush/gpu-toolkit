@@ -28,15 +28,17 @@
 
   - ### :mechanical_arm: [Linear Algebra](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra)
 
+  - ### :abacus: [Number Theory](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory)
+
 - ### :dna: [String Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/String-Algorithms)
 
 ## :man_teacher: Learning Resources
 
 ### :film_projector: [CUDA Streams](https://on-demand.gputechconf.com/gtc/2014/presentations/S4158-cuda-streams-best-practices-common-pitfalls.pdf)
 
-### :man_technologist: [CUDA Samples by NVIDIA](https://github.com/NVIDIA/cuda-samples)
-
 ### :tv: [CUDA Tutorials by Creel](https://www.youtube.com/playlist?list=PLKK11Ligqititws0ZOoGk3SW-TZCar4dK)
+
+### :man_technologist: [CUDA Samples by NVIDIA](https://github.com/NVIDIA/cuda-samples)
 
 ### :tv: [Intro to CUDA by Josh Holloway](https://www.youtube.com/playlist?list=PLC6u37oFvF40BAm7gwVP7uDdzmW83yHPe)
 
