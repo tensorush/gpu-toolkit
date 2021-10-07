@@ -1,3 +1,4 @@
+%%cu
 #include <iostream>
 
 // Define global constants in host memory
@@ -8,8 +9,8 @@ constexpr unsigned BLOCK_DIM = 1 << 5;
 constexpr unsigned ARRAY_DIM = 1 << 10;
 constexpr unsigned NUM_STREAMS = 1 << 1;
 constexpr unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(bool);
-constexpr unsigned CUBED_DIGITS_BYTES = NUM_DIGITS * sizeof(unsigned);
 constexpr unsigned NUM_ELEMENTS_PER_STREAM = ARRAY_DIM / NUM_STREAMS;
+constexpr unsigned CUBED_DIGITS_BYTES = NUM_DIGITS * sizeof(unsigned);
 constexpr unsigned CUBED_DIGITS[NUM_DIGITS] = {0, 1, 8, 27, 64, 125, 216, 343, 512, 729};
 
 // Define global array in device constant memory
@@ -36,7 +37,7 @@ __global__ void ThreeDigitArmstrongNumbersKernel(bool *array, unsigned streamIdx
 }
 
 int main() {
-    // HOST EXECUTION
+    std::cout << "HOST EXECUTION\n";
 
     // Declare host clock variables
     float elapsedTimeHost;
@@ -46,7 +47,7 @@ int main() {
     startTimeHost = clock();
 
     // Compute three-digit Armstrong numbers on host as on device
-    std::cout << "Three-digit Armstrong numbers: ";
+    std::cout << "Three-digit Armstrong numbers computed on host: ";
     unsigned sumOfCubedDigits;
     for (unsigned number = 0; number < ARRAY_DIM; ++number) {
         if (number > MIN_NUMBER && number < MAX_NUMBER) {
@@ -65,9 +66,9 @@ int main() {
     // Stop host clock
     stopTimeHost = clock();
     elapsedTimeHost = stopTimeHost - startTimeHost;
-    std::cout << "Elapsed Time on Host: " << elapsedTimeHost << " ms\n";
+    std::cout << "Elapsed Time on Host: " << elapsedTimeHost << " ms\n\n";
 
-    // DEVICE EXECUTION
+    std::cout << "DEVICE EXECUTION\n";
 
     // Declare array for output data on host
     bool hostArray[ARRAY_DIM];
@@ -143,7 +144,7 @@ int main() {
     cudaMemcpy(hostArray, deviceArray, ARRAY_BYTES, cudaMemcpyDeviceToHost);
 
     // Print output data on host
-    std::cout << "Three-digit Armstrong numbers ";
+    std::cout << "Three-digit Armstrong numbers computed on device: ";
     for (unsigned number = 0; number < ARRAY_DIM; ++number) {
         if (hostArray[number]) {
             std::cout << number << ' ';
