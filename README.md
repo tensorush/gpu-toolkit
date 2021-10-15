@@ -50,10 +50,6 @@
 
 ### :film_projector: [GPU Memory Slides by Robert Dalrymple](https://www.ce.jhu.edu/dalrymple/classes/602/Class13.pdf)
 
-### :film_projector: [Advanced CUDA: Memory Optimization Slides by NVIDIA](https://on-demand.gputechconf.com/gtc-express/2011/presentations/NVIDIA_GPU_Computing_Webinars_CUDA_Memory_Optimization.pdf)
-
-### :film_projector: [Advanced CUDA: Performance Optimization Slides by NVIDIA](https://www.nvidia.com/content/cudazone/download/Advanced_CUDA_Training_NVISION08.pdf)
-
 ### :tv: [CUDA Crash Course by CoffeeBeforeArch](https://www.youtube.com/playlist?list=PLxNPSjHT5qvtYRVdNN1yDcdSl39uHV_sU)
 
 ### :thought_balloon: [CUDA Developer Blogposts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
@@ -62,13 +58,17 @@
 
 ### :tv: [Parallel and Distributed Computing by Tom Nurkkala](https://www.youtube.com/playlist?list=PLG3vBTUJlY2HdwYsdFCdXQraInoc3j9DU)
 
+### :film_projector: [Advanced CUDA: Memory Optimization Slides by NVIDIA](https://on-demand.gputechconf.com/gtc-express/2011/presentations/NVIDIA_GPU_Computing_Webinars_CUDA_Memory_Optimization.pdf)
+
 ### :film_projector: [Optimizing Parallel Reduction in CUDA Slides by Mark Harris](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf)
+
+### :film_projector: [Advanced CUDA: Performance Optimization Slides by NVIDIA](https://www.nvidia.com/content/cudazone/download/Advanced_CUDA_Training_NVISION08.pdf)
 
 ### :film_projector: [Better Performance at Lower Occupancy Slides by Vasily Volkov](https://www.nvidia.com/content/GTC-2010/pdfs/2238_GTC2010.pdf)
 
-### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
-
 ### :film_projector: [CUTLASS: CUDA Template Library Slides by Andrew Kerr and others](https://on-demand.gputechconf.com/gtc/2018/presentation/s8854-cutlass-software-primitives-for-dense-linear-algebra-at-all-levels-and-scales-within-cuda.pdf)
+
+### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
 
 ### :tv: [Introduction to GPU Programming with CUDA and Thrust Talk by Richard Thomson](https://www.youtube.com/watch?v=tbb835UFRQ4&t=2229s)
 
