@@ -1,4 +1,3 @@
-%%cu
 #include <iostream>
 
 // Define global constants in host memory

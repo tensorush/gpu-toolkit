@@ -18,7 +18,7 @@
     <p><a href="https://twitter.com/etiennejcb/">Animation by Étienne Jacob</a></p>
 </h4>
 
-## :axe: Essential algorithms for GPU hacking with CUDA that I've been researching, reimplementing and refining for quick reference.
+## :axe: Essential algorithms for GPU hacking with CUDA C++ that I've been researching, reimplementing and refining for quick reference.
 
 > ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
 
@@ -40,6 +40,8 @@
 
 ### :man_technologist: [CUDA Samples by NVIDIA](https://github.com/NVIDIA/cuda-samples)
 
+### :man_technologist: [CUDA C++ Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#abstract)
+
 ### :tv: [Intro to CUDA by Josh Holloway](https://www.youtube.com/playlist?list=PLC6u37oFvF40BAm7gwVP7uDdzmW83yHPe)
 
 ### :man_technologist: [CUDA Training Series by NVIDIA](https://github.com/olcf/cuda-training-series)
@@ -53,6 +55,8 @@
 ### :tv: [CUDA Crash Course by CoffeeBeforeArch](https://www.youtube.com/playlist?list=PLxNPSjHT5qvtYRVdNN1yDcdSl39uHV_sU)
 
 ### :thought_balloon: [CUDA Developer Blogposts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
+
+### :film_projector: [Parallel Prefix Sum with CUDA by Mark Harris](https://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf)
 
 ### :thought_balloon: [CUDA Basics Blogposts by Sebastian Eberhardt](https://gpgpu.io/category/cuda-basics/)
 
@@ -68,9 +72,15 @@
 
 ### :film_projector: [CUTLASS: CUDA Template Library Slides by Andrew Kerr and others](https://on-demand.gputechconf.com/gtc/2018/presentation/s8854-cutlass-software-primitives-for-dense-linear-algebra-at-all-levels-and-scales-within-cuda.pdf)
 
+### :film_projector: [GPU Performance Analysis and Optimization by Paulius Micikevicius](https://on-demand.gputechconf.com/gtc/2012/presentations/S0514-GTC2012-GPU-Performance-Analysis.pdf)
+
 ### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
 
+### :man_teacher: [CUDA and Applications to Task-based Programming Eurographics 2021 Tutorial](https://cuda-tutorial.github.io/)
+
 ### :tv: [Introduction to GPU Programming with CUDA and Thrust Talk by Richard Thomson](https://www.youtube.com/watch?v=tbb835UFRQ4&t=2229s)
+
+### :thought_balloon: [CUDA Pro Tip: Optimized Filtering with Warp-Aggregated Atomics by Andy Adinets](https://developer.nvidia.com/blog/cuda-pro-tip-optimized-filtering-warp-aggregated-atomics/)
 
 <!-- MARKDOWN LINKS -->
 
