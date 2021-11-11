@@ -6,9 +6,9 @@
 typedef float2 Complex;
 
 // Define global constants in host memory
-constexpr unsigned BLOCK_DIM = 1 << 3;
-constexpr unsigned SIGNAL_LENGTH = 1 << 4;
-constexpr unsigned FILTER_LENGTH = 1 << 3;
+constexpr unsigned BLOCK_DIM = 1 << 5;
+constexpr unsigned SIGNAL_LENGTH = 1 << 13;
+constexpr unsigned FILTER_LENGTH = 1 << 5;
 constexpr unsigned FIRST_HALF_FILTER_LENGTH = FILTER_LENGTH / 2;
 constexpr unsigned FILTER_PADDING_LENGTH = SIGNAL_LENGTH - FIRST_HALF_FILTER_LENGTH;
 constexpr unsigned SECOND_HALF_FILTER_LENGTH = FILTER_LENGTH - FIRST_HALF_FILTER_LENGTH;
