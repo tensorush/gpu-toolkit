@@ -50,9 +50,9 @@
 
 ### :film_projector: [CUDA C/C++ Basics Slides by NVIDIA](https://www.olcf.ornl.gov/wp-content/uploads/2013/02/Intro_to_CUDA_C-TS.pdf)
 
-### :film_projector: [GPU Memory Slides by Robert Dalrymple](https://www.ce.jhu.edu/dalrymple/classes/602/Class13.pdf)
-
 ### :tv: [CUDA Crash Course by CoffeeBeforeArch](https://www.youtube.com/playlist?list=PLxNPSjHT5qvtYRVdNN1yDcdSl39uHV_sU)
+
+### :film_projector: [GPU Memory Slides by Robert Dalrymple](https://www.ce.jhu.edu/dalrymple/classes/602/Class13.pdf)
 
 ### :thought_balloon: [CUDA Developer Blogposts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
 
