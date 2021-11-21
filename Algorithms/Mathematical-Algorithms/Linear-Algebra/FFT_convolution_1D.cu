@@ -18,32 +18,28 @@ constexpr unsigned FIRST_HALF_FILTER_BYTES = FIRST_HALF_FILTER_LENGTH * sizeof(C
 constexpr unsigned SECOND_HALF_FILTER_BYTES = SECOND_HALF_FILTER_LENGTH * sizeof(Complex);
 
 // Define operations on complex numbers
-__device__ Complex ComplexScaling(Complex a, float s)
-{
+__device__ Complex ComplexScaling(Complex a, float s) {
     Complex c;
     c.x = s * a.x;
     c.y = s * a.y;
     return c;
 }
 
-__host__ __device__ Complex ComplexAddition(Complex a, Complex b)
-{
+__host__ __device__ Complex ComplexAddition(Complex a, Complex b) {
     Complex c;
     c.x = a.x + b.x;
     c.y = a.y + b.y;
     return c;
 }
 
-__host__ __device__ Complex ComplexMultiplication(Complex a, Complex b)
-{
+__host__ __device__ Complex ComplexMultiplication(Complex a, Complex b) {
     Complex c;
     c.x = a.x * b.x - a.y * b.y;
     c.y = a.x * b.y + a.y * b.x;
     return c;
 }
 
-__global__ void ComplexMultiplicationAndScaling(Complex *a, const Complex *b)
-{
+__global__ void ComplexMultiplicationAndScaling(Complex *a, const Complex *b) {
     const int numThreads = blockDim.x * gridDim.x;
     const int threadID = blockIdx.x * blockDim.x + threadIdx.x;
     for (int i = threadID; i < PADDED_INPUT_DATA_LENGTH; i += numThreads) {
