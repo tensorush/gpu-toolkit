@@ -20,15 +20,15 @@
 
 ## :axe: Essential algorithm kernels for GPU hacking with CUDA C++ that I've been researching, reimplementing and refining for quick reference.
 
-## :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about custom kernel optimization options, please take a look at the following CUDA C++ programs:
+> ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
+
+## :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about ways of optimizing custom kernels, please take a look at the following CUDA C++ programs:
 
 - ### Multi-stream execution - [Matrix addition program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/matrix_addition.cu)
 
 - ### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/square_matrix_multiplication.cu)
 
 - ### Texture memory allocation - [Three-digit Armstrong numbers program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory/three-digit_armstrong-numbers.cu)
-
-> ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
 
 ## :axe: [Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms)
 
