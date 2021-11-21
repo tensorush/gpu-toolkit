@@ -1,76 +1,67 @@
 #include <iostream>
 #include <cufft.h>
 
-// Rename float2 type to complex number
-typedef float2 Complex;
-
 // Define global constants in host memory
 constexpr unsigned BLOCK_DIM = 1 << 3;
 constexpr unsigned SIGNAL_LENGTH = 1 << 5;
 constexpr unsigned FILTER_LENGTH = 1 << 3;
 constexpr unsigned FIRST_HALF_FILTER_LENGTH = FILTER_LENGTH / 2;
-constexpr unsigned SIGNAL_BYTES = SIGNAL_LENGTH * sizeof(Complex);
-constexpr unsigned FILTER_BYTES = FILTER_LENGTH * sizeof(Complex);
+constexpr unsigned SIGNAL_BYTES = SIGNAL_LENGTH * sizeof(float) * 2;
+constexpr unsigned FILTER_BYTES = FILTER_LENGTH * sizeof(float) * 2;
+constexpr unsigned SHARED_MEMORY_BYTES = BLOCK_DIM * sizeof(float) * 2;
 constexpr unsigned SECOND_HALF_FILTER_LENGTH = FILTER_LENGTH - FIRST_HALF_FILTER_LENGTH;
 constexpr unsigned PADDED_INPUT_DATA_LENGTH = SIGNAL_LENGTH + SECOND_HALF_FILTER_LENGTH;
-constexpr unsigned PADDED_INPUT_DATA_BYTES = PADDED_INPUT_DATA_LENGTH * sizeof(Complex);
-constexpr unsigned FIRST_HALF_FILTER_BYTES = FIRST_HALF_FILTER_LENGTH * sizeof(Complex);
-constexpr unsigned SECOND_HALF_FILTER_BYTES = SECOND_HALF_FILTER_LENGTH * sizeof(Complex);
+constexpr unsigned PADDED_INPUT_DATA_BYTES = PADDED_INPUT_DATA_LENGTH * sizeof(float) * 2;
+constexpr unsigned FIRST_HALF_FILTER_BYTES = FIRST_HALF_FILTER_LENGTH * sizeof(float) * 2;
+constexpr unsigned SECOND_HALF_FILTER_BYTES = SECOND_HALF_FILTER_LENGTH * sizeof(float) * 2;
 
-// Define operations on complex numbers
-__device__ Complex ComplexScaling(Complex a, float s) {
-    Complex c;
-    c.x = s * a.x;
-    c.y = s * a.y;
-    return c;
-}
+// Define struct for complex numbers
+struct Complex {
+    float real;
+    float imaginary;
+    __host__ __device__ Complex() : real(0.0f), imaginary(0.0f) {}
+    __host__ __device__ Complex(float a, float b) : real(a), imaginary(b) {}
+    __host__ __device__ Complex operator * (const float s) {
+        return Complex(s * real, s * imaginary);
+    }
+    __host__ __device__ Complex operator + (const Complex& b) {
+        return Complex(real + b.real, imaginary + b.imaginary);
+    }
+    __host__ __device__ Complex operator * (const Complex& b) {
+        return Complex(real * b.real - imaginary * b.imaginary, imaginary * b.real + real * b.imaginary);
+    }
+};
 
-__host__ __device__ Complex ComplexAddition(Complex a, Complex b) {
-    Complex c;
-    c.x = a.x + b.x;
-    c.y = a.y + b.y;
-    return c;
-}
-
-__host__ __device__ Complex ComplexMultiplication(Complex a, Complex b) {
-    Complex c;
-    c.x = a.x * b.x - a.y * b.y;
-    c.y = a.x * b.y + a.y * b.x;
-    return c;
-}
-
+// Define complex number multiplication and scaling kernel
 __global__ void ComplexMultiplicationAndScaling(Complex *a, const Complex *b) {
     const int numThreads = blockDim.x * gridDim.x;
     const int threadID = blockIdx.x * blockDim.x + threadIdx.x;
     for (int i = threadID; i < PADDED_INPUT_DATA_LENGTH; i += numThreads) {
-        a[i] = ComplexScaling(ComplexMultiplication(a[i], b[i]), 1.0f / PADDED_INPUT_DATA_LENGTH);
+        a[i] = (a[i] * b[i]) * (1.0f / PADDED_INPUT_DATA_LENGTH);
     }
 }
 
-// Define custom 1D FFT convolution calculation kernel
+// Define custom 1D convolution calculation kernel
 __global__ void CustomConvolutionKernel(const Complex *signal, const Complex *filter, Complex *filteredSignal) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    __shared__ Complex tile[BLOCK_DIM];
+    extern __shared__ Complex tile[];
     tile[threadIdx.x] = signal[i];
     __syncthreads();
     Complex signalValue, filteredValue;
-    filteredValue.x = 0.0f;
-    filteredValue.y = 0.0f;
     int start = i - FIRST_HALF_FILTER_LENGTH;
     for (int j = 0; j < FILTER_LENGTH; ++j) {
         if (start + j >= 0 && start + j < SIGNAL_LENGTH) {
             signalValue = (start + j >= blockIdx.x * blockDim.x && start + j < (blockIdx.x + 1) * blockDim.x)
                           ? (tile[threadIdx.x + j - FIRST_HALF_FILTER_LENGTH])
                           : (signal[start + j]);
-            filteredValue = ComplexAddition(filteredValue, ComplexMultiplication(signalValue, filter[j]));
+            filteredValue = filteredValue + signalValue * filter[j];
         }
     }
     filteredSignal[i] = filteredValue;
 }
 
-
 int main() {
-    std::cout << "CUSTOM DEVICE KERNEL EXECUTION\n";
+    std::cout << "NAIVE CUSTOM DEVICE KERNEL EXECUTION\n";
 
     // Declare pointers to input and output data on host
     Complex *hostFilter = nullptr;
@@ -94,14 +85,14 @@ int main() {
 
     // Assign signal data on host
     for (unsigned i = 0; i < SIGNAL_LENGTH; ++i) {
-        hostSignal[i].x = rand() % RAND_MAX;
-        hostSignal[i].y = rand() % RAND_MAX;
+        hostSignal[i].real = rand() % RAND_MAX;
+        hostSignal[i].imaginary = rand() % RAND_MAX;
     }
 
     // Assign filter data on host
     for (unsigned j = 0; j < FILTER_LENGTH; ++j) {
-        hostFilter[j].x = rand() % RAND_MAX;
-        hostFilter[j].y = rand() % RAND_MAX;
+        hostFilter[j].real = rand() % RAND_MAX;
+        hostFilter[j].imaginary = rand() % RAND_MAX;
     }
 
     // Pad signal data on host
@@ -131,8 +122,8 @@ int main() {
     dim3 blockDim(BLOCK_DIM);
     dim3 gridDim((PADDED_INPUT_DATA_LENGTH - 1) / BLOCK_DIM + 1);
 
-    // Launch custom 1D FFT convolution calculation kernel on device and record start of execution
-    CustomConvolutionKernel<<<gridDim, blockDim>>>(deviceSignal, deviceFilter, deviceFilteredSignal);
+    // Launch custom 1D convolution calculation kernel on device and record start of execution
+    CustomConvolutionKernel<<<gridDim, blockDim, SHARED_MEMORY_BYTES>>>(deviceSignal, deviceFilter, deviceFilteredSignal);
 
     // Record start of execution
     cudaEventRecord(startTime, 0);
@@ -151,8 +142,8 @@ int main() {
 
     // Print output data on host
     std::cout << "Filtered Signal:\n";
-    for (unsigned i = 0; i < PADDED_INPUT_DATA_LENGTH; ++i) {
-        std::cout << hostFilteredSignal[i].x << ' ' << hostFilteredSignal[i].y << '\n';
+    for (unsigned i = 1; i < PADDED_INPUT_DATA_LENGTH; ++i) {
+        std::cout << hostFilteredSignal[i].real << ' ' << hostFilteredSignal[i].imaginary << '\n';
     }
     std::cout << '\n';
 
@@ -202,7 +193,7 @@ int main() {
     // Print output data on host
     std::cout << "Filtered Signal:\n";
     for (unsigned i = 0; i < PADDED_INPUT_DATA_LENGTH; ++i) {
-        std::cout << hostFilteredSignal[i].x << ' ' << hostFilteredSignal[i].y << '\n';
+        std::cout << hostFilteredSignal[i].real << ' ' << hostFilteredSignal[i].imaginary << '\n';
     }
     std::cout << '\n';
 
