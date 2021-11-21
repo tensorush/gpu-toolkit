@@ -18,17 +18,31 @@
     <p><a href="https://twitter.com/etiennejcb/">Animation by Étienne Jacob</a></p>
 </h4>
 
-## :axe: Essential algorithms for GPU hacking with CUDA C++ that I've been researching, reimplementing and refining for quick reference.
+## :axe: Essential algorithm kernels for GPU hacking with CUDA C++ that I've been researching, reimplementing and refining for quick reference.
+
+## :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about custom kernel optimization options, please take a look at the following CUDA C++ programs:
+
+- ### Multi-stream execution - [Matrix addition program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/matrix_addition.cu)
+
+- ### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/square_matrix_multiplication.cu)
+
+- ### Texture memory allocation - [Three-digit Armstrong numbers program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory/three-digit_armstrong-numbers.cu)
 
 > ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
 
 ## :axe: [Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms)
+
+- ### :bus: [Array Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Array-Algorithms)
+
+- ### :framed_picture: [Image Processing Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Image-Processing-Algorithms)
 
 - ### :scroll: [Mathematical Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms)
 
   - ### :mechanical_arm: [Linear Algebra](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra)
 
   - ### :abacus: [Number Theory](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory)
+
+- ### :bar_chart: [Sorting Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Sorting-Algorithms)
 
 - ### :dna: [String Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/String-Algorithms)
 

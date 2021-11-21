@@ -1,17 +1,18 @@
-// TODO: Finish complete program
-
-__global__ void MatrixTranspose(float *odata, const float *idata) {
-    __shared__ float tile[TILE_DIM][TILE_DIM];
-    int x = blockIdx.x * TILE_DIM + threadIdx.x;
-    int y = blockIdx.y * TILE_DIM + threadIdx.y;
-    int width = gridDim.x * TILE_DIM;
-    for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS) {
-        tile[threadIdx.y + j][threadIdx.x] = idata[(y + j) * width + x];
+template <typename T>
+__global__ void MatrixTransposeKernel(const T *A, T *transposeA) {
+    unsigned tileDim = blockIdx.x;
+    unsigned numTiles = blockIdx.y;
+    __shared__ T tile[tileDim][tileDim + 1];
+    unsigned tileX = blockIdx.x * tileDim + threadIdx.x;
+    unsigned tileY = blockIdx.y * tileDim + threadIdx.y;
+    unsigned width = gridDim.x * tileDim;
+    for (unsigned idx = 0; idx < tileDim; idx += numTiles) {
+        tile[threadIdx.y + idx][threadIdx.x] = A[(tileY + idx) * width + tileX];
     }
     __syncthreads();
-    x = blockIdx.y * TILE_DIM + threadIdx.x;
-    y = blockIdx.x * TILE_DIM + threadIdx.y;
-    for (int j = 0; j < TILE_DIM; j += BLOCK_ROWS) {
-        odata[(y + j) * width + x] = tile[threadIdx.x][threadIdx.y + j];
+    tileX = blockIdx.y * tileDim + threadIdx.x;
+    tileY = blockIdx.x * tileDim + threadIdx.y;
+    for (unsigned idx = 0; idx < tileDim; idx += numTiles) {
+        transposeA[(tileY + idx) * width + tileX] = tile[threadIdx.x][threadIdx.y + idx];
     }
 }

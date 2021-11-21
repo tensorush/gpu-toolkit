@@ -34,7 +34,7 @@ int main() {
     cudaMallocHost((void **) &hostB, TOTAL_BYTES_B);
     cudaMallocHost((void **) &hostC, TOTAL_BYTES_C);
 
-    // Initialize input data on host
+    // Assign input data on host
     for (unsigned row = 0; row < NUM_ROWS_A; ++row) {
         for (unsigned col = 0; col < SHARED_DIM; ++col) {
             hostA[row * SHARED_DIM + col] = 2.0f;

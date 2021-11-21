@@ -1,19 +1,21 @@
 #include <iostream>
 #include <cufft.h>
-#include <array>
 
 // Rename float2 type to complex number
 typedef float2 Complex;
 
 // Define global constants in host memory
-constexpr unsigned BLOCK_DIM = 1 << 5;
-constexpr unsigned SIGNAL_LENGTH = 1 << 13;
-constexpr unsigned FILTER_LENGTH = 1 << 5;
+constexpr unsigned BLOCK_DIM = 1 << 3;
+constexpr unsigned SIGNAL_LENGTH = 1 << 5;
+constexpr unsigned FILTER_LENGTH = 1 << 3;
 constexpr unsigned FIRST_HALF_FILTER_LENGTH = FILTER_LENGTH / 2;
-constexpr unsigned FILTER_PADDING_LENGTH = SIGNAL_LENGTH - FIRST_HALF_FILTER_LENGTH;
+constexpr unsigned SIGNAL_BYTES = SIGNAL_LENGTH * sizeof(Complex);
+constexpr unsigned FILTER_BYTES = FILTER_LENGTH * sizeof(Complex);
 constexpr unsigned SECOND_HALF_FILTER_LENGTH = FILTER_LENGTH - FIRST_HALF_FILTER_LENGTH;
 constexpr unsigned PADDED_INPUT_DATA_LENGTH = SIGNAL_LENGTH + SECOND_HALF_FILTER_LENGTH;
 constexpr unsigned PADDED_INPUT_DATA_BYTES = PADDED_INPUT_DATA_LENGTH * sizeof(Complex);
+constexpr unsigned FIRST_HALF_FILTER_BYTES = FIRST_HALF_FILTER_LENGTH * sizeof(Complex);
+constexpr unsigned SECOND_HALF_FILTER_BYTES = SECOND_HALF_FILTER_LENGTH * sizeof(Complex);
 
 // Define operations on complex numbers
 __device__ Complex ComplexScaling(Complex a, float s)
@@ -107,31 +109,15 @@ int main() {
     }
 
     // Pad signal data on host
-    for (unsigned i = SIGNAL_LENGTH; i < PADDED_INPUT_DATA_LENGTH; ++i) {
-        hostSignal[i].x = 0.0f;
-        hostSignal[i].y = 0.0f;
-    }
+    cudaMemset(hostSignal + SIGNAL_LENGTH, 0, PADDED_INPUT_DATA_BYTES - SIGNAL_BYTES);
     
     // Pad filter data on host
-    std::array<Complex, PADDED_INPUT_DATA_BYTES> hostFilterCopy;
-    for (unsigned j = 0; j < FILTER_LENGTH; ++j) {
-        hostFilterCopy[j].x = hostFilter[j].x;
-        hostFilterCopy[j].y = hostFilter[j].y;
-    }
-    for (unsigned j = FIRST_HALF_FILTER_LENGTH, jCopy = 0; j < FILTER_LENGTH; ++j, ++jCopy) {
-        hostFilterCopy[jCopy] = hostFilter[j];
-    }
-    for (unsigned jCopy = SECOND_HALF_FILTER_LENGTH, k = 0; k < FILTER_PADDING_LENGTH; ++jCopy, k++) {
-        hostFilterCopy[jCopy].x = 0.0f;
-        hostFilterCopy[jCopy].y = 0.0f;
-    }
-    for (unsigned j = 0, jCopy = PADDED_INPUT_DATA_LENGTH - FIRST_HALF_FILTER_LENGTH; j < FIRST_HALF_FILTER_LENGTH; ++j, ++jCopy) {
-        hostFilterCopy[jCopy] = hostFilter[j];
-    }
-    for (unsigned j = 0; j < PADDED_INPUT_DATA_BYTES; ++j) {
-        hostFilter[j].x = hostFilterCopy[j].x;
-        hostFilter[j].y = hostFilterCopy[j].y;
-    }
+    Complex *hostFilterCopy = nullptr;
+    cudaMallocHost((void **) &hostFilterCopy, PADDED_INPUT_DATA_BYTES);
+    cudaMemcpy(hostFilterCopy, hostFilter + FIRST_HALF_FILTER_LENGTH, SECOND_HALF_FILTER_BYTES, cudaMemcpyHostToHost);
+    cudaMemset(hostFilterCopy + SECOND_HALF_FILTER_LENGTH, 0, PADDED_INPUT_DATA_BYTES - FILTER_BYTES);
+    cudaMemcpy(hostFilterCopy + PADDED_INPUT_DATA_LENGTH - FIRST_HALF_FILTER_LENGTH, hostFilter, FIRST_HALF_FILTER_BYTES, cudaMemcpyHostToHost);
+    hostFilter = hostFilterCopy;
 
     // Copy padded input data from host to device
     cudaMemcpy(deviceSignal, hostSignal, PADDED_INPUT_DATA_BYTES, cudaMemcpyHostToDevice);
