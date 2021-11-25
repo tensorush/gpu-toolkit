@@ -22,7 +22,7 @@
 
 > ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
 
-### :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about the ways of optimizing custom kernels, please take a look at the following CUDA C++ programs:
+### :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about optimizing custom kernels, have a look at the following CUDA C++ programs:
 
 - #### Multi-stream execution - [Matrix addition program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/matrix_addition.cu)
 
@@ -35,6 +35,8 @@
 - ### :bus: [Array Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Array-Algorithms)
 
 - ### :framed_picture: [Image Processing Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Image-Processing-Algorithms)
+
+- ### :dragon: [Computer Graphics Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Computer-Graphics-Algorithms)
 
 - ### :scroll: [Mathematical Algorithms](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms)
 
@@ -87,6 +89,8 @@
 ### :film_projector: [CUTLASS: CUDA Template Library Slides by Andrew Kerr and others](https://on-demand.gputechconf.com/gtc/2018/presentation/s8854-cutlass-software-primitives-for-dense-linear-algebra-at-all-levels-and-scales-within-cuda.pdf)
 
 ### :film_projector: [GPU Performance Analysis and Optimization by Paulius Micikevicius](https://on-demand.gputechconf.com/gtc/2012/presentations/S0514-GTC2012-GPU-Performance-Analysis.pdf)
+
+### :film_projector: [General-purpose GPU Computing with CUDA Course by Will Landau](https://github.com/wlandau/gpu/tree/main/lectures)
 
 ### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
 
