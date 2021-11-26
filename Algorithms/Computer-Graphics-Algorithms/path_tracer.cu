@@ -44,7 +44,7 @@ __host__ __device__ float clampBetweenZeroAndOne(const float x) {
 }
 
 __host__ int convertColourFromFloatToInt(const float x) {
-    return int(std::pow(clampBetweenZeroAndOne(x), 1 / 2.2f) * 255 + 0.5f);
+    return int(std::pow(clampBetweenZeroAndOne(x), 1 / 2.2f) * 255.0f + 0.5f);
 }
 
 enum MaterialReflectionType {

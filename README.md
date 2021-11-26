@@ -92,6 +92,8 @@
 
 ### :film_projector: [General-purpose GPU Computing with CUDA Course by Will Landau](https://github.com/wlandau/gpu/tree/main/lectures)
 
+### :man_technologist: [GPU Programming and Architecture from University of Pennsylvania](https://github.com/CIS565-Fall-2021)
+
 ### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
 
 ### :man_teacher: [CUDA and Applications to Task-based Programming Eurographics 2021 Tutorial](https://cuda-tutorial.github.io/)
