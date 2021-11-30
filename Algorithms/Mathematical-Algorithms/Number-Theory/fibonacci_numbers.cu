@@ -102,6 +102,12 @@ int main() {
     }
 	std::cout << '\n';
 
+    // Free device memory
+    cudaFree(deviceFibonacciNumbers);
+
+    // Free host memory
+    cudaFreeHost(hostFibonacciNumbers);
+
     // Check for errors
     unsigned exitStatus = EXIT_SUCCESS;
     cudaError_t err = cudaGetLastError();
