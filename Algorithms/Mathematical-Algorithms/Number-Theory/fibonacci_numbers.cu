@@ -1,27 +1,56 @@
-#include "cuda_runtime.h"
+#include <device_launch_parameters.h>
+#include <cuda_runtime.h>
 #include <iostream>
 #include <cmath>
 
-const unsigned BLOCK_DIM = 1 << 5;
-const unsigned ARRAY_DIM = 1 << 10;
+const unsigned BLOCK_DIM = 1 << 6;
+const long unsigned ARRAY_DIM = 1 << 6;
 const double goldenRatio = 1.618033988749895;
 const double squareRootOfFive = 2.23606797749979;
-const unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(unsigned);
+const long unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(long unsigned);
 
-__global__ void FibonacciNumbersKernel(unsigned *fibonacciNumbers) {
-	unsigned idx = blockIdx.x * blockDim.x + threadIdx.x;
+__global__ void FibonacciNumbersKernel(long unsigned *fibonacciNumbers) {
+	long unsigned idx = blockIdx.x * blockDim.x + threadIdx.x;
 	fibonacciNumbers[idx] = std::round(std::pow(goldenRatio, idx) / squareRootOfFive);
 }
 
 int main() {
+    std::cout << "HOST KERNEL EXECUTION\n";
+
     // Declare array for output data on host
-	unsigned *hostFibonacciNumbers = nullptr;
+	long unsigned *hostFibonacciNumbers = nullptr;
 
     // Allocate host memory for output data
     cudaMallocHost((void **) &hostFibonacciNumbers, ARRAY_BYTES);
 
+    // Declare host clock variables
+    float elapsedTimeHost;
+    clock_t startTimeHost, stopTimeHost;
+
+    // Start host clock
+    startTimeHost = clock();
+
+    // Compute Fibonacci numbers on host
+    for (long unsigned i = 0; i < ARRAY_DIM; ++i) {
+	    hostFibonacciNumbers[i] = std::round(std::pow(goldenRatio, i) / squareRootOfFive);
+    }
+
+    // Stop host clock
+    stopTimeHost = clock();
+    elapsedTimeHost = stopTimeHost - startTimeHost;
+    std::cout << "Elapsed Time on Host: " << elapsedTimeHost << " ms\n";
+
+    // Print output data on host
+    std::cout << "Fibonacci numbers computed on host:\n";
+	for (long unsigned i = 0; i < ARRAY_DIM; ++i) {
+		std::cout << hostFibonacciNumbers[i] << ' ';
+    }
+	std::cout << '\n';
+
+    std::cout << "\nDEVICE KERNEL EXECUTION\n";
+
     // Declare array for output data on device
-	unsigned *deviceFibonacciNumbers = nullptr;
+	long unsigned *deviceFibonacciNumbers = nullptr;
 
     // Allocate device memory for output data
     cudaMalloc((void **) &deviceFibonacciNumbers, ARRAY_BYTES);
@@ -30,15 +59,43 @@ int main() {
     dim3 blockDim(BLOCK_DIM);
     dim3 gridDim((ARRAY_DIM - 1) / blockDim.x + 1);
 
+    // Declare event variables to measure execution time
+    float elapsedTimeDevice;
+    cudaEvent_t startTimeDevice, endTimeDevice;
+
+    // Create events to measure execution time
+    cudaEventCreate(&startTimeDevice);
+    cudaEventCreate(&endTimeDevice);
+
+    // Record start of execution
+    cudaEventRecord(startTimeDevice, 0);
+    
+    // Synchronize start of execution call
+    cudaEventSynchronize(startTimeDevice);
+
 	// Launch three-digit Armstrong numbers calculation kernel on device and record start of execution
 	FibonacciNumbersKernel<<<gridDim, blockDim>>>(deviceFibonacciNumbers);
+
+    // Record end of execution
+    cudaEventRecord(endTimeDevice, 0);
+
+    // Synchronize end of execution call
+    cudaEventSynchronize(endTimeDevice);
+
+    // Calculate and print elapsed time
+    cudaEventElapsedTime(&elapsedTimeDevice, startTimeDevice, endTimeDevice);
+    std::cout << "Elapsed Time on Device: " << elapsedTimeDevice << " ms\n";
+
+    // Destroy events
+    cudaEventDestroy(startTimeDevice);
+    cudaEventDestroy(endTimeDevice);
 
     // Transfer output data from device to host
 	cudaMemcpy(hostFibonacciNumbers, deviceFibonacciNumbers, ARRAY_BYTES, cudaMemcpyDeviceToHost);
 	
     // Print output data on host
     std::cout << "Fibonacci numbers computed on device:\n";
-	for (unsigned i = 0; i < ARRAY_DIM; ++i) {
+	for (long unsigned i = 0; i < ARRAY_DIM; ++i) {
 		std::cout << hostFibonacciNumbers[i] << ' ';
     }
 	std::cout << '\n';

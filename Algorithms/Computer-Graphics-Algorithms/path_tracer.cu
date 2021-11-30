@@ -1,9 +1,11 @@
+#include <device_launch_parameters.h>
+#include <cuda_runtime.h>
 #include <iostream>
 #include <cmath>
 
+constexpr float PI = 3.1415927f;
 constexpr unsigned BLOCK_DIM = 8;
 constexpr unsigned NUM_SPHERES = 9;
-constexpr float PI = 3.14159265359f;
 constexpr unsigned NUM_SAMPLES = 1024;
 constexpr unsigned SCREEN_WIDTH = 512;
 constexpr unsigned SCREEN_HEIGHT = 384;
@@ -39,7 +41,11 @@ __device__ float3 CrossProduct(const float3 &vector1, const float3 &vector2) {
 	return make_float3(vector1.y * vector2.z - vector1.z * vector2.y, vector1.z * vector2.x - vector1.x * vector2.z, vector1.x * vector2.y - vector1.y * vector2.x);
 }
 
-__host__ __device__ float clampBetweenZeroAndOne(const float x) {
+__device__ float clampInRange(const float x, const float a, const float b) {
+    return std::fmaxf(a, std::fminf(x, b));
+}
+
+__host__ float clampBetweenZeroAndOne(const float x) {
     return (x < 0.0f) ? (0.0f) : ((x > 1.0f) ? (1.0f) : (x));
 }
 
@@ -207,7 +213,7 @@ __global__ void PathTracingKernel(float3 *image) {
         pixelColour = Add(pixelColour, Scale(TraceRayPath(primaryRay, seed1, seed2), 1.0f / NUM_SAMPLES));
     }
     // Clamp floating-point pixel colour in range [0; 1]
-    image[curPixel] = make_float3(clampBetweenZeroAndOne(pixelColour.x), clampBetweenZeroAndOne(pixelColour.y), clampBetweenZeroAndOne(pixelColour.z));
+    image[curPixel] = make_float3(clampInRange(pixelColour.x, 0.0f, 1.0f), clampInRange(pixelColour.y, 0.0f, 1.0f), clampInRange(pixelColour.z, 0.0f, 1.0f));
 }
 
 int main() {
