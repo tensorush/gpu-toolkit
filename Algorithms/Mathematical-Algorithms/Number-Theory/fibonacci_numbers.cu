@@ -3,12 +3,14 @@
 #include <iostream>
 #include <cmath>
 
+// Define global constants in host memory
 const unsigned BLOCK_DIM = 1 << 6;
 const long unsigned ARRAY_DIM = 1 << 6;
 const double goldenRatio = 1.618033988749895;
 const double squareRootOfFive = 2.23606797749979;
 const long unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(long unsigned);
 
+// Define Fibonacci numbers calculation kernel
 __global__ void FibonacciNumbersKernel(long unsigned *fibonacciNumbers) {
 	long unsigned idx = blockIdx.x * blockDim.x + threadIdx.x;
 	fibonacciNumbers[idx] = std::round(std::pow(goldenRatio, idx) / squareRootOfFive);
@@ -67,14 +69,14 @@ int main() {
     cudaEventCreate(&startTimeDevice);
     cudaEventCreate(&endTimeDevice);
 
+	// Launch Fibonacci numbers calculation kernel on device
+	FibonacciNumbersKernel<<<gridDim, blockDim>>>(deviceFibonacciNumbers);
+
     // Record start of execution
     cudaEventRecord(startTimeDevice, 0);
     
     // Synchronize start of execution call
     cudaEventSynchronize(startTimeDevice);
-
-	// Launch three-digit Armstrong numbers calculation kernel on device and record start of execution
-	FibonacciNumbersKernel<<<gridDim, blockDim>>>(deviceFibonacciNumbers);
 
     // Record end of execution
     cudaEventRecord(endTimeDevice, 0);
