@@ -23,7 +23,7 @@ int main() {
 	long unsigned *hostFibonacciNumbers = nullptr;
 
     // Allocate host memory for output data
-    cudaMallocHost((void **) &hostFibonacciNumbers, ARRAY_BYTES);
+    cudaMallocHost(&hostFibonacciNumbers, ARRAY_BYTES);
 
     // Declare host clock variables
     float elapsedTimeHost;
@@ -55,7 +55,7 @@ int main() {
 	long unsigned *deviceFibonacciNumbers = nullptr;
 
     // Allocate device memory for output data
-    cudaMalloc((void **) &deviceFibonacciNumbers, ARRAY_BYTES);
+    cudaMalloc(&deviceFibonacciNumbers, ARRAY_BYTES);
 
     // Define kernel configuration variables
     dim3 blockDim(BLOCK_DIM);

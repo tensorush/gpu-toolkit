@@ -76,14 +76,14 @@ int main() {
     Complex *deviceFilteredSignal = nullptr;
 
     // Allocate pinned host memory for input and output data
-    cudaMallocHost((void **) &hostSignal, PADDED_INPUT_DATA_BYTES);
-    cudaMallocHost((void **) &hostFilter, PADDED_INPUT_DATA_BYTES);
-    cudaMallocHost((void **) &hostFilteredSignal, PADDED_INPUT_DATA_BYTES);
+    cudaMallocHost(&hostSignal, PADDED_INPUT_DATA_BYTES);
+    cudaMallocHost(&hostFilter, PADDED_INPUT_DATA_BYTES);
+    cudaMallocHost(&hostFilteredSignal, PADDED_INPUT_DATA_BYTES);
 
     // Allocate device memory for input and output data
-    cudaMalloc((void **) &deviceSignal, PADDED_INPUT_DATA_BYTES);
-    cudaMalloc((void **) &deviceFilter, PADDED_INPUT_DATA_BYTES);
-    cudaMalloc((void **) &deviceFilteredSignal, PADDED_INPUT_DATA_BYTES);
+    cudaMalloc(&deviceSignal, PADDED_INPUT_DATA_BYTES);
+    cudaMalloc(&deviceFilter, PADDED_INPUT_DATA_BYTES);
+    cudaMalloc(&deviceFilteredSignal, PADDED_INPUT_DATA_BYTES);
 
     // Assign signal data on host
     for (unsigned i = 0; i < SIGNAL_LENGTH; ++i) {
@@ -102,7 +102,7 @@ int main() {
     
     // Pad filter data on host
     Complex *hostFilterCopy = nullptr;
-    cudaMallocHost((void **) &hostFilterCopy, PADDED_INPUT_DATA_BYTES);
+    cudaMallocHost(&hostFilterCopy, PADDED_INPUT_DATA_BYTES);
     cudaMemcpy(hostFilterCopy, hostFilter + FIRST_HALF_FILTER_LENGTH, SECOND_HALF_FILTER_BYTES, cudaMemcpyHostToHost);
     cudaMemset(hostFilterCopy + SECOND_HALF_FILTER_LENGTH, 0, PADDED_INPUT_DATA_BYTES - FILTER_BYTES);
     cudaMemcpy(hostFilterCopy + PADDED_INPUT_DATA_LENGTH - FIRST_HALF_FILTER_LENGTH, hostFilter, FIRST_HALF_FILTER_BYTES, cudaMemcpyHostToHost);

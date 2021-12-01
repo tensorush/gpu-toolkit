@@ -10,8 +10,12 @@
 [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/tensorush/CUDA-Hackers-Toolkit)
 [![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
-<p align="center">
+<!-- <p align="center">
     <img src="https://bleuje.github.io/gifset/2021/gifs/2021_8_cyclespropagation_v2.gif">
+</p> -->
+
+<p align="center">
+    <img src="https://bleuje.github.io/gifset/2021/gifs/2021_16_quadtree.webp">
 </p>
 
 <h4 align="center"> 

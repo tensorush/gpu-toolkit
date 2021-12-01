@@ -29,9 +29,9 @@ int main() {
     float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
 
     // Allocate pinned host memory for input data
-    cudaMallocHost((void **) &hostA, TOTAL_BYTES);
-    cudaMallocHost((void **) &hostB, TOTAL_BYTES);
-    cudaMallocHost((void **) &hostC, TOTAL_BYTES);
+    cudaMallocHost(&hostA, TOTAL_BYTES);
+    cudaMallocHost(&hostB, TOTAL_BYTES);
+    cudaMallocHost(&hostC, TOTAL_BYTES);
 
     // Initialize input data on host
     for (unsigned row = 0; row < NUM_ROWS; ++row) {
@@ -49,9 +49,9 @@ int main() {
     float *deviceA = nullptr, *deviceB = nullptr, *deviceC = nullptr;
 
     // Allocate device memory for input and output data
-    cudaMalloc((void **) &deviceA, TOTAL_BYTES);
-    cudaMalloc((void **) &deviceB, TOTAL_BYTES);
-    cudaMalloc((void **) &deviceC, TOTAL_BYTES);
+    cudaMalloc(&deviceA, TOTAL_BYTES);
+    cudaMalloc(&deviceB, TOTAL_BYTES);
+    cudaMalloc(&deviceC, TOTAL_BYTES);
 
     // Declare streams
     cudaStream_t streams[NUM_STREAMS];

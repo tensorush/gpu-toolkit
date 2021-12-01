@@ -32,9 +32,9 @@ int main() {
     float *hostA = nullptr, *hostB = nullptr, *hostC = nullptr;
 
     // Allocate pinned host memory for input data
-    cudaMallocHost((void **) &hostA, TOTAL_BYTES_A);
-    cudaMallocHost((void **) &hostB, TOTAL_BYTES_B);
-    cudaMallocHost((void **) &hostC, TOTAL_BYTES_C);
+    cudaMallocHost(&hostA, TOTAL_BYTES_A);
+    cudaMallocHost(&hostB, TOTAL_BYTES_B);
+    cudaMallocHost(&hostC, TOTAL_BYTES_C);
 
     // Assign input data on host
     for (unsigned row = 0; row < NUM_ROWS_A; ++row) {
@@ -52,9 +52,9 @@ int main() {
     float *deviceA = nullptr, *deviceB = nullptr, *deviceC = nullptr;
 
     // Allocate device memory for input and output data
-    cudaMalloc((void **) &deviceA, TOTAL_BYTES_A);
-    cudaMalloc((void **) &deviceB, TOTAL_BYTES_B);
-    cudaMalloc((void **) &deviceC, TOTAL_BYTES_C);
+    cudaMalloc(&deviceA, TOTAL_BYTES_A);
+    cudaMalloc(&deviceB, TOTAL_BYTES_B);
+    cudaMalloc(&deviceC, TOTAL_BYTES_C);
 
     // Copy input data from host to device
     cudaMemcpy(deviceA, hostA, TOTAL_BYTES_A, cudaMemcpyHostToDevice);
@@ -89,7 +89,7 @@ int main() {
 
     // Calculate and print elapsed time
     cudaEventElapsedTime(&elapsedTime, startTime, endTime);
-    std::cout << "Elapsed Time on Device Stream №1: " << elapsedTime << " ms\n";
+    std::cout << "Elapsed Time on Device: " << elapsedTime << " ms\n";
 
     // Destroy events
     cudaEventDestroy(startTime);

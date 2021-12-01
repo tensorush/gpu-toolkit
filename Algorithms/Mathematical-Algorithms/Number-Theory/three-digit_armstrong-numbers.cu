@@ -81,8 +81,8 @@ int main() {
     unsigned *deviceCubedDigits = nullptr;
 
     // Allocate device memory for output and pre-computed data
-    cudaMalloc((void **) &deviceArray, ARRAY_BYTES);
-    cudaMalloc((void **) &deviceCubedDigits, CUBED_DIGITS_BYTES);
+    cudaMalloc(&deviceArray, ARRAY_BYTES);
+    cudaMalloc(&deviceCubedDigits, CUBED_DIGITS_BYTES);
 
     // Copy pre-computed data from host to device
     cudaMemcpy(deviceCubedDigits, CUBED_DIGITS, CUBED_DIGITS_BYTES, cudaMemcpyHostToDevice);
@@ -152,6 +152,9 @@ int main() {
         }
     }
     std::cout << '\n';
+
+    // Unbind pre-computed data to texture reference on device
+    cudaUnbindTexture(CUBED_DIGITS_DEVICE_TEXTURE);
 
     // Free device memory
     cudaFree(deviceArray);
