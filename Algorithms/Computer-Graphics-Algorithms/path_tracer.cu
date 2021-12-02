@@ -7,7 +7,7 @@
 // Define global constants
 const float PI = 3.1415927f;
 const unsigned NUM_SPHERES = 8;
-const unsigned BLOCK_DIM = 1 << 5;
+const unsigned BLOCK_DIM = 1 << 10;
 const unsigned NUM_SAMPLES = 1 << 15;
 const unsigned SCREEN_WIDTH = 1 << 10;
 const unsigned SCREEN_HEIGHT = 1 << 10;
@@ -170,10 +170,10 @@ __device__ float3 TraceRayPath(Ray &ray, unsigned *seed1, unsigned *seed2) {
         }
         // Add emitted light to accumulated ray colour
         accumulatedRayColour = Add(accumulatedRayColour, Multiply(colourBleedingFactor, hitSphere.emission));
-        // Generate random azimuth and elevation level for new ray direction
+        // Generate random azimuth and zenith angles for new ray direction
         float azimuth = 2.0f * PI * GenerateRandomNumber(seed1, seed2);
-        float elevation = GenerateRandomNumber(seed1, seed2);
-        float squareRoottOfElevation = std::sqrt(elevation);
+        float zenith = GenerateRandomNumber(seed1, seed2);
+        float squareRoottOfZenith = std::sqrt(zenith);
         // Construct orthonormal basis to generate random ray direction
         float3 unitNormal1 = hitNormal;
         float3 someNormal = (std::abs(unitNormal1.x) > 0.1f) ? (make_float3(0.0f, 1.0f, 0.0f)) : (make_float3(1.0f, 0.0f, 0.0f));
@@ -181,9 +181,9 @@ __device__ float3 TraceRayPath(Ray &ray, unsigned *seed1, unsigned *seed2) {
         float3 unitNormal3 = CrossProduct(unitNormal1, unitNormal2);
         // Generate random ray direction on hemisphere using polar coordinates
         // and cosine weighted importance sampling, which favours ray directions closer to normal
-        unitNormal1 = Scale(unitNormal1, std::sqrt(1.0f - elevation));
-        unitNormal2 = Scale(unitNormal2, std::cos(azimuth) * squareRoottOfElevation);
-        unitNormal3 = Scale(unitNormal3, std::sin(azimuth) * squareRoottOfElevation);
+        unitNormal1 = Scale(unitNormal1, std::sqrt(1.0f - zenith));
+        unitNormal2 = Scale(unitNormal2, std::cos(azimuth) * squareRoottOfZenith);
+        unitNormal3 = Scale(unitNormal3, std::sin(azimuth) * squareRoottOfZenith);
         ray.direction = Normalize(Add(unitNormal1, Add(unitNormal2, unitNormal3)));
         // Offset ray origin slightly to prevent self intersection
         ray.origin = Add(hitPoint, Scale(hitNormal, 0.05f));
