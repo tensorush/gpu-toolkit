@@ -28,7 +28,7 @@
 
 - #### Coalesced memory access - [Image decolorization kernel](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Image-Processing-Algorithms/rgba2grey.cu)
 
-- #### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/square_matrix_multiplication.cu)
+- #### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/square_matrix_multiplication.cu)
 
 - #### Texture memory allocation - [Three-digit Armstrong numbers program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory/three-digit_armstrong-numbers.cu)
 
