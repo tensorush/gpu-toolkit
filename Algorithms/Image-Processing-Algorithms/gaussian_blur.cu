@@ -1,3 +1,5 @@
+#include <device_launch_parameters.h>
+#include <cuda_runtime.h>
 #include <algorithm>
 
 __global__ void ImageChannelsSeparationKernel(const uchar4 *const inputImageRGBA, unsigned numRows, unsigned numCols, unsigned char *const red, unsigned char *const green, unsigned char *const blue) {

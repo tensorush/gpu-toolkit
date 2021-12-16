@@ -9,10 +9,10 @@ const float PI = 3.1415927f;
 const unsigned NUM_SPHERES = 8;
 const unsigned BLOCK_DIM = 1 << 10;
 const unsigned NUM_SAMPLES = 1 << 15;
-const unsigned SCREEN_WIDTH = 1 << 10;
-const unsigned SCREEN_HEIGHT = 1 << 10;
+const unsigned IMAGE_WIDTH = 1 << 10;
+const unsigned IMAGE_HEIGHT = 1 << 10;
 const unsigned NUM_RAY_BOUNCES = 1 << 2;
-const unsigned NUM_PIXELS = SCREEN_WIDTH * SCREEN_HEIGHT;
+const unsigned NUM_PIXELS = IMAGE_WIDTH * IMAGE_HEIGHT;
 const unsigned IMAGE_BYTES = NUM_PIXELS * sizeof(float3);
 
 // Define operations on float3
@@ -201,20 +201,20 @@ __global__ void PathTracingKernel(float3 *image) {
     // Assign each thread to pixel
     unsigned pixelCoordinateX = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned pixelCoordinateY = blockIdx.y * blockDim.y + threadIdx.y;
-    unsigned curPixel = (SCREEN_HEIGHT - pixelCoordinateY - 1) * SCREEN_WIDTH + pixelCoordinateX;
+    unsigned curPixel = (IMAGE_HEIGHT - pixelCoordinateY - 1) * IMAGE_WIDTH + pixelCoordinateX;
     unsigned seed1 = pixelCoordinateX;
     unsigned seed2 = pixelCoordinateY;
-    // Generate ray directed at lower left screen corner
+    // Generate ray directed at lower left IMAGE corner
     Ray ray(make_float3(50.0f, 52.0f, 295.6f), Normalize(make_float3(0.0f, -0.042612f, -1.0f)));
     // Compute directions for other rays by adding rayOffsetX along x and y pixel coordinate axes
     float fieldOfViewAngle = 0.5135f;
     float3 pixelColour = make_float3(0.0f, 0.0f, 0.0f);
-    float3 rayOffsetX = make_float3(SCREEN_WIDTH * fieldOfViewAngle / SCREEN_HEIGHT, 0.0f, 0.0f);
+    float3 rayOffsetX = make_float3(IMAGE_WIDTH * fieldOfViewAngle / IMAGE_HEIGHT, 0.0f, 0.0f);
     float3 rayOffsetY = Scale(Normalize(CrossProduct(rayOffsetX, ray.direction)), fieldOfViewAngle);
     // Sample rays
     for (unsigned sampleIdx = 0; sampleIdx < NUM_SAMPLES; ++sampleIdx) {
         // Compute primary ray direction
-        float3 direction = Add(ray.direction, Add(Scale(rayOffsetX, (pixelCoordinateX + 0.25f) / SCREEN_WIDTH - 0.5f), Scale(rayOffsetY, (pixelCoordinateY + 0.25f) / SCREEN_HEIGHT - 0.5f)));
+        float3 direction = Add(ray.direction, Add(Scale(rayOffsetX, (pixelCoordinateX + 0.25f) / IMAGE_WIDTH - 0.5f), Scale(rayOffsetY, (pixelCoordinateY + 0.25f) / IMAGE_HEIGHT - 0.5f)));
         // Create primary ray
         Ray primaryRay = Ray(Add(ray.origin, Scale(direction, 40.0f)), Normalize(direction));
         // Add traced ray path to pixel color
@@ -247,7 +247,7 @@ int main() {
 
     // Define kernel configuration variables
     dim3 blockDim(BLOCK_DIM, BLOCK_DIM);
-    dim3 gridDim((SCREEN_WIDTH - 1) / blockDim.x + 1, (SCREEN_HEIGHT - 1) / blockDim.y + 1);
+    dim3 gridDim((IMAGE_WIDTH - 1) / blockDim.x + 1, (IMAGE_HEIGHT - 1) / blockDim.y + 1);
 
     // Record start of execution
     cudaEventRecord(startTime, 0);
@@ -266,7 +266,7 @@ int main() {
 
     // Calculate and print elapsed time
     cudaEventElapsedTime(&elapsedTime, startTime, endTime);
-    std::cout << "Elapsed Time on Device at " << SCREEN_HEIGHT << 'x' << SCREEN_WIDTH << " resolution: " << elapsedTime << " ms\n";
+    std::cout << "Elapsed Time on Device at " << IMAGE_HEIGHT << 'x' << IMAGE_WIDTH << " resolution: " << elapsedTime << " ms\n";
 
     // Destroy events
     cudaEventDestroy(startTime);
@@ -280,7 +280,7 @@ int main() {
     imageFile.open("path_traced_image.ppm");
 
     // Write output image to .ppm file
-    imageFile << "P3\n" << SCREEN_WIDTH << ' ' << SCREEN_HEIGHT << '\n' << 255 << '\n';
+    imageFile << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << '\n' << 255 << '\n';
     for (unsigned pixelIdx = 0; pixelIdx < NUM_PIXELS; ++pixelIdx) {
         imageFile << convertColourFromFloatToInt(hostImage[pixelIdx].x) << ' ' << convertColourFromFloatToInt(hostImage[pixelIdx].y) << ' ' << convertColourFromFloatToInt(hostImage[pixelIdx].z) << ' ';
     }

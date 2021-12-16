@@ -1,3 +1,6 @@
+#include <device_launch_parameters.h>
+#include <cuda_runtime.h>
+
 template <typename T>
 __global__ void ArrayReductionKernel(T *inputArray, T *outputArray, unsigned arraySize) {
 	extern __shared__ T intermediateSums[];

@@ -87,14 +87,14 @@ int main() {
 
     // Assign signal data on host
     for (unsigned i = 0; i < SIGNAL_LENGTH; ++i) {
-        hostSignal[i].real = rand() % RAND_MAX;
-        hostSignal[i].imaginary = rand() % RAND_MAX;
+        hostSignal[i].real = std::rand() % RAND_MAX;
+        hostSignal[i].imaginary = std::rand() % RAND_MAX;
     }
 
     // Assign filter data on host
     for (unsigned j = 0; j < FILTER_LENGTH; ++j) {
-        hostFilter[j].real = rand() % RAND_MAX;
-        hostFilter[j].imaginary = rand() % RAND_MAX;
+        hostFilter[j].real = std::rand() % RAND_MAX;
+        hostFilter[j].imaginary = std::rand() % RAND_MAX;
     }
 
     // Pad signal data on host

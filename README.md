@@ -10,10 +10,6 @@
 [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/tensorush/CUDA-Hackers-Toolkit)
 [![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
-<!-- <p align="center">
-    <img src="https://bleuje.github.io/gifset/2021/gifs/2021_8_cyclespropagation_v2.gif">
-</p> -->
-
 <p align="center">
     <img src="https://bleuje.github.io/gifset/2021/gifs/2021_16_quadtree.webp">
 </p>
@@ -30,7 +26,9 @@
 
 - #### Multi-stream execution - [Matrix addition program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/matrix_addition.cu)
 
-- #### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/square_matrix_multiplication.cu)
+- #### Coalesced memory access - [Image decolorization kernel](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Image-Processing-Algorithms/.cu)
+
+- #### Shared memory allocation - [Square matrix multiplication program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/image_decolorization.cu)
 
 - #### Texture memory allocation - [Three-digit Armstrong numbers program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Number-Theory/three-digit_armstrong-numbers.cu)
 
@@ -81,6 +79,8 @@
 ### :thought_balloon: [CUDA Basics Blogposts by Sebastian Eberhardt](https://gpgpu.io/category/cuda-basics/)
 
 ### :tv: [Parallel and Distributed Computing by Tom Nurkkala](https://www.youtube.com/playlist?list=PLG3vBTUJlY2HdwYsdFCdXQraInoc3j9DU)
+
+### :film_projector: [CUDA: Threaded Programming Slides by Kevin Cooper](http://www.math.wsu.edu/math/kcooper/CUDA/text.php)
 
 ### :film_projector: [Advanced CUDA: Memory Optimization Slides by NVIDIA](https://on-demand.gputechconf.com/gtc-express/2011/presentations/NVIDIA_GPU_Computing_Webinars_CUDA_Memory_Optimization.pdf)
 
