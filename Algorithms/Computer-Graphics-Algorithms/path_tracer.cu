@@ -5,17 +5,17 @@
 #include <cmath>
 
 // Define global constants
-const float PI = 3.1415927f;
-const unsigned NUM_SPHERES = 8;
-const unsigned BLOCK_DIM = 1 << 10;
-const unsigned NUM_SAMPLES = 1 << 15;
-const unsigned IMAGE_WIDTH = 1 << 10;
-const unsigned IMAGE_HEIGHT = 1 << 10;
-const unsigned NUM_RAY_BOUNCES = 1 << 2;
-const unsigned NUM_PIXELS = IMAGE_WIDTH * IMAGE_HEIGHT;
-const unsigned IMAGE_BYTES = NUM_PIXELS * sizeof(float3);
+constexpr float PI = 3.1415927f;
+constexpr unsigned NUM_SPHERES = 8;
+constexpr unsigned BLOCK_DIM = 1 << 5;
+constexpr unsigned NUM_SAMPLES = 1 << 15;
+constexpr unsigned IMAGE_WIDTH = 1 << 10;
+constexpr unsigned IMAGE_HEIGHT = 1 << 10;
+constexpr unsigned NUM_RAY_BOUNCES = 1 << 2;
+constexpr unsigned NUM_PIXELS = IMAGE_WIDTH * IMAGE_HEIGHT;
+constexpr unsigned IMAGE_BYTES = NUM_PIXELS * sizeof(float3);
 
-// Define operations on float3
+// Define vector operations on float3
 __device__ float3 Scale(const float3 &vector, const float scalar) {
 	return make_float3(scalar * vector.x, scalar * vector.y, scalar * vector.z);
 }
@@ -66,54 +66,51 @@ struct Ray {
 
 struct Sphere {
     float radius;
-    float3 center;
+    float3 centre;
     float3 colour;
     float3 emission;
     MaterialType materialType;
     __device__ float computeHitDistanceFromRayOriginToSphere(const Ray &ray) const {
         /*
             Ray equation:
-                p(x, y, z) = ray.origin + hitDistance * ray.direction
+                hitPoint = rayOrigin + hitDistance * rayDirection
             Sphere equation:
-                x^2 + y^2 + z^2 = radius^2
-            Quadratic equation:
-                ax^2 + bx + c = 0
-            Quadratic equation solutions:
-                x1, x2 = (-b +- sqrt(b^2 - 4ac)) / 2a
-            Solve for hitDistance:
-                hitDistance^2 * ray.direction^2 + 2t * (origin - p) * ray.direction + (origin - p)^2 - radius^2 = 0
+                (hitPoint - sphereCentre) · (hitPoint - sphereCentre) - sphereRadius^2 = 0
+            Substitute hitPoint and solve resulting quadratic equation for shortest hitDistance:
+                (rayDirection · rayDirection) * hitDistance^2
+                + 2 * rayDirection · (rayOrigin - sphereCentre) * hitDistance
+                + (rayOrigin - sphereCentre) · (rayOrigin - sphereCentre) - sphereRadius^2 = 0
         */
         // Declare ray-to-sphere hit distance
         float hitDistance;
         // Define epsilon to aid floating point imprecision
-        float epsilon = 0.0001f;
-        // Distance from ray origin to sphere center
-        float3 raySphereDistance = Subtract(center, ray.origin);
+        float epsilon = 1e-4f;
+        // Distance from ray origin to sphere centre
+        float3 raySphereDistance = Subtract(centre, ray.origin);
         // Find b coefficient of quadratic equation
         float b = DotProduct(raySphereDistance, ray.direction);
         // Find discriminant of quadratic equation
         float discriminant = b * b - DotProduct(raySphereDistance, raySphereDistance) + radius * radius;
-        // If discriminant < 0, no real solutions
+        // If discriminant < 0, no intersections exist
         if (discriminant < 0.0f) {
             return 0.0f;
         }
-        // If discriminant >= 0, find real solutions
+        // If discriminant >= 0, find shortest hit distance
         discriminant = std::sqrt(discriminant);
-        // Return shortest hit distance from ray origin to sphere
         return ((hitDistance = b - discriminant) > epsilon) ? (hitDistance) : (((hitDistance = b + discriminant) > epsilon) ? (hitDistance) : (0.0f));
     }
 };
 
-// Define Cornell Box with spheres scene in device memory
+// Define Cornell Box made of spheres in device memory
 __constant__ Sphere SPHERES[] = {
-    { 1e5f, { 50.0f, 40.8f, 1e5f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Back
-    { 16.5f, { 27.0f, 16.5f, 47.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Small 1
-    { 16.5f, { 73.0f, 16.5f, 78.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Small 2
-    { 1e5f, { 50.0f, 1e5f, 81.6f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Bottom
-    { 600.0f, { 50.0f, 680.83f, 81.6f }, { 0.0f, 0.0f, 0.0f }, { 2.0f, 1.8f, 1.6f }, DIFFUSE }, // Light
-    { 1e5f, { 1e5f + 1.0f, 40.8f, 81.6f }, { 0.75f, 0.25f, 0.25f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Left
-    { 1e5f, { 50.0f, -1e5f + 81.6f, 81.6f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Top
-    { 1e5f, { -1e5f + 99.0f, 40.8f, 81.6f }, { 0.25f, 0.25f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Right
+    { 1e5f, { 50.0f, 1e5f, 81.6f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Floor
+    { 1e5f, { 50.0f, 40.8f, 1e5f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Back Wall
+    { 16.5f, { 73.0f, 16.5f, 78.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Small Left
+    { 16.5f, { 27.0f, 16.5f, 47.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Small Right
+    { 600.0f, { 50.0f, 680.83f, 81.6f }, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, DIFFUSE }, // Light Source
+    { 1e5f, { 1e5f + 1.0f, 40.8f, 81.6f }, { 0.75f, 0.25f, 0.25f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Left Wall
+    { 1e5f, { 50.0f, -1e5f + 81.6f, 81.6f }, { 0.75f, 0.75f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Ceiling
+    { 1e5f, { -1e5f + 99.0f, 40.8f, 81.6f }, { 0.25f, 0.25f, 0.75f }, { 0.0f, 0.0f, 0.0f }, DIFFUSE }, // Right Wall
 };
 
 // Define rendering kernels
@@ -145,9 +142,9 @@ __device__ float GenerateRandomNumber(unsigned *seed1, unsigned *seed2) {
 __device__ float3 TraceRayPath(Ray &ray, unsigned *seed1, unsigned *seed2) {
     /*
         Rendering equation:
-            Outgoing Radiance = Emitted Radiance + Reflected Radiance,
-            where Reflected Radiance is an integral of incoming radiance over the hemisphere above the hit point
-            multiplied by the bidirectional reflectence distribution function of the hit material (BRDF) and cosine of incident angle
+            outgoingRadiance = emittedRadiance + reflectedRadiance,
+            where reflectedRadiance is an integral of incoming radiance over the hemisphere above the hit point
+            multiplied by the BRDF of the hit material and the geometry term - cosine of incident angle
     */
     // Define accumulated ray colour to be black
     float3 accumulatedRayColour = make_float3(0.0f, 0.0f, 0.0f);
@@ -164,7 +161,7 @@ __device__ float3 TraceRayPath(Ray &ray, unsigned *seed1, unsigned *seed2) {
         // Compute hit point and normal
         const Sphere &hitSphere = SPHERES[hitSphereIndex];
         float3 hitPoint = Add(ray.origin, Scale(ray.direction, hitDistance));
-        float3 hitNormal = Normalize(Subtract(hitPoint, hitSphere.center));
+        float3 hitNormal = Normalize(Subtract(hitPoint, hitSphere.centre));
         if (DotProduct(hitNormal, ray.direction) > 0.0f) {
             hitNormal = Scale(hitNormal, -1.0f);
         }
@@ -204,9 +201,9 @@ __global__ void PathTracingKernel(float3 *image) {
     unsigned curPixel = (IMAGE_HEIGHT - pixelCoordinateY - 1) * IMAGE_WIDTH + pixelCoordinateX;
     unsigned seed1 = pixelCoordinateX;
     unsigned seed2 = pixelCoordinateY;
-    // Generate ray directed at lower left IMAGE corner
+    // Generate ray directed at lower left image corner
     Ray ray(make_float3(50.0f, 52.0f, 295.6f), Normalize(make_float3(0.0f, -0.042612f, -1.0f)));
-    // Compute directions for other rays by adding rayOffsetX along x and y pixel coordinate axes
+    // Compute directions for other rays by adding offsets along x and y pixel coordinate axes
     float fieldOfViewAngle = 0.5135f;
     float3 pixelColour = make_float3(0.0f, 0.0f, 0.0f);
     float3 rayOffsetX = make_float3(IMAGE_WIDTH * fieldOfViewAngle / IMAGE_HEIGHT, 0.0f, 0.0f);

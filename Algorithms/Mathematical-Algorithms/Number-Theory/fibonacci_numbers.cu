@@ -4,11 +4,11 @@
 #include <cmath>
 
 // Define global constants in host memory
-const unsigned BLOCK_DIM = 1 << 6;
-const long unsigned ARRAY_DIM = 1 << 6;
-const double goldenRatio = 1.618033988749895;
-const double squareRootOfFive = 2.23606797749979;
-const long unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(long unsigned);
+constexpr unsigned BLOCK_DIM = 1 << 6;
+constexpr long unsigned ARRAY_DIM = 1 << 6;
+constexpr double goldenRatio = 1.618033988749895;
+constexpr double squareRootOfFive = 2.23606797749979;
+constexpr long unsigned ARRAY_BYTES = ARRAY_DIM * sizeof(long unsigned);
 
 // Define Fibonacci numbers calculation kernel
 __global__ void FibonacciNumbersKernel(long unsigned *fibonacciNumbers) {

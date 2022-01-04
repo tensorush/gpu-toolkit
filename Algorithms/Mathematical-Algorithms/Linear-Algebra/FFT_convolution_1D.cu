@@ -36,8 +36,8 @@ struct Complex {
 
 // Define complex number multiplication and scaling kernel
 __global__ void ComplexMultiplicationAndScaling(Complex *a, const Complex *b) {
-    const int numThreads = blockDim.x * gridDim.x;
-    const int threadID = blockIdx.x * blockDim.x + threadIdx.x;
+    int numThreads = blockDim.x * gridDim.x;
+    int threadID = blockIdx.x * blockDim.x + threadIdx.x;
     for (int i = threadID; i < PADDED_INPUT_DATA_LENGTH; i += numThreads) {
         a[i] = (a[i] * b[i]) * (1.0f / PADDED_INPUT_DATA_LENGTH);
     }
