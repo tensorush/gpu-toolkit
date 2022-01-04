@@ -22,7 +22,9 @@
 
 > ### _Any contributions, corrections or optimizations are very welcome!_ :hugs:
 
-### :warning: Purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels. If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about optimizing custom kernels, have a look at the following CUDA C++ programs:
+### :warning: The purpose of this repo is to showcase minimal CUDA C++ kernel implementations of popular algorithms. For this reason most implementations aren't optimized and contain only GPU kernels.
+
+### :sparkles: If you seek optimized solutions you should refer to [NVIDIA CUDA-X Libraries](https://developer.nvidia.com/gpu-accelerated-libraries). In case you're curious about optimizing custom kernels, have a look at the following CUDA C++ programs:
 
 - #### Multi-stream execution - [Matrix addition program](https://github.com/tensorush/CUDA-Hackers-Toolkit/blob/master/Algorithms/Mathematical-Algorithms/Linear-Algebra/matrix_addition.cu)
 
