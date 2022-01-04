@@ -11,7 +11,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
 <p align="center">
-    <img src="https://bleuje.github.io/gifset/2021/gifs/2021_16_quadtree.webp">
+    <img src="https://bleuje.github.io/gifset/2021/gifs/2021_16_quadtree.gif">
 </p>
 
 <h4 align="center"> 
