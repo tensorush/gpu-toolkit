@@ -102,6 +102,8 @@
 
 ### :man_technologist: [Learn CUDA Programming by Jaegeun Han and Bharatkumar Sharma](https://github.com/PacktPublishing/Learn-CUDA-Programming)
 
+### :thought_balloon: [Accelerated Ray Tracing in One Weekend in CUDA Blogpost by Roger Allen](https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/)
+
 ### :man_teacher: [CUDA and Applications to Task-based Programming Eurographics 2021 Tutorial](https://cuda-tutorial.github.io/)
 
 ### :tv: [Introduction to GPU Programming with CUDA and Thrust Talk by Richard Thomson](https://www.youtube.com/watch?v=tbb835UFRQ4&t=2229s)
