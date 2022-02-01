@@ -84,6 +84,8 @@
 
 ### :film_projector: [CUDA: Threaded Programming Slides by Kevin Cooper](http://www.math.wsu.edu/math/kcooper/CUDA/text.php)
 
+### :tv: [Parallel Programming Concepts Course by Peter Tröger](https://www.tele-task.de/series/977/)
+
 ### :film_projector: [Advanced CUDA: Memory Optimization Slides by NVIDIA](https://on-demand.gputechconf.com/gtc-express/2011/presentations/NVIDIA_GPU_Computing_Webinars_CUDA_Memory_Optimization.pdf)
 
 ### :film_projector: [Optimizing Parallel Reduction in CUDA Slides by Mark Harris](https://developer.download.nvidia.com/assets/cuda/files/reduction.pdf)
