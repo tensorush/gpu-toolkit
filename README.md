@@ -73,11 +73,11 @@
 
 ### :film_projector: [GPU Memory Slides by Robert Dalrymple](https://www.ce.jhu.edu/dalrymple/classes/602/Class13.pdf)
 
-### :thought_balloon: [CUDA Developer Blog posts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
+### :thought_balloon: [CUDA Developer Blog Posts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
 
 ### :film_projector: [Parallel Prefix Sum with CUDA by Mark Harris](https://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf)
 
-### :thought_balloon: [CUDA Basics Blog posts by Sebastian Eberhardt](https://gpgpu.io/category/cuda-basics/)
+### :thought_balloon: [CUDA Basics Blog Posts by Sebastian Eberhardt](https://gpgpu.io/category/cuda-basics/)
 
 ### :tv: [Parallel and Distributed Computing by Tom Nurkkala](https://www.youtube.com/playlist?list=PLG3vBTUJlY2HdwYsdFCdXQraInoc3j9DU)
 
