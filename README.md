@@ -75,6 +75,8 @@
 
 ### :thought_balloon: [CUDA Developer Blog Posts by Mark Harris](https://developer.nvidia.com/blog/author/mharris/)
 
+### :man_technologist: [GPU Programming: When, Why and How? by ENCCS](https://enccs.github.io/gpu-programming/)
+
 ### :film_projector: [Parallel Prefix Sum with CUDA by Mark Harris](https://www.eecs.umich.edu/courses/eecs570/hw/parprefix.pdf)
 
 ### :thought_balloon: [CUDA Basics Blog Posts by Sebastian Eberhardt](https://gpgpu.io/category/cuda-basics/)
