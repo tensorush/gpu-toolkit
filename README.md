@@ -1,4 +1,4 @@
-## :dragon: :toolbox: **cuda toolkit**
+## :dragon: :toolbox: **gpu toolkit**
 
 [![LC][lc-shd]][lc-url]
 
