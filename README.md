@@ -1,4 +1,4 @@
-## :dragon: :toolbox: **gpu toolkit**
+## :peacock: :toolbox: **gpu toolkit**
 
 [![LC][lc-shd]][lc-url]
 
